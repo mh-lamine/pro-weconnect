@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../wserv/dist",
+    outDir: "../serv/static/pro-weconnect",
     emptyOutDir: true,
   },
 });
