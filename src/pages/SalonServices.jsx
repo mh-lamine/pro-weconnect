@@ -3,6 +3,7 @@ import ModalAddCategory from "@/components/modal/ModalAddCategory";
 import ModalAddService from "@/components/modal/ModalAddService";
 import ModalDisableService from "@/components/modal/ModalDisableService";
 import ModalUpdateService from "@/components/modal/ModalUpdateService";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -12,7 +13,7 @@ import {
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { EllipsisVertical, EyeOffIcon, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const SalonServices = () => {
   const [categories, setCategories] = useState();
@@ -117,13 +118,27 @@ const SalonServices = () => {
 
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col space-y-4">
-      <Button
-        variant="link"
-        className="justify-start h-0 p-0"
-        onClick={() => navigate(-1)}
-      >
-        Retour
-      </Button>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">Tableau de bord</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/salon">Salon</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/salon/availabilities">Disponibilités</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div>
         <h1 className="text-3xl font-semibold">Mes prestations</h1>
         <ModalAddCategory createCategory={createCategory} />

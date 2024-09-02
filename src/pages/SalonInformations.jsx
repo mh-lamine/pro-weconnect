@@ -1,12 +1,13 @@
 import EditableInput from "@/components/EditableInput";
 import Error from "@/components/Error";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const PHONE_NUMBER_REGEX =
   /^(?:(?:\+|00)33\s?[1-9](?:[\s.-]?\d{2}){4}|0[1-9](?:[\s.-]?\d{2}){4})$/;
@@ -106,13 +107,27 @@ export default function SalonInformations() {
 
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
-      <Button
-        variant="link"
-        className="justify-start h-0 p-0"
-        onClick={() => navigate(-1)}
-      >
-        Retour
-      </Button>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">Tableau de bord</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/salon">Salon</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/salon/informations">Informations</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h1 className="text-3xl font-semibold">Mes informations</h1>
       <form className="space-y-2" ref={formRef}>
         <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">

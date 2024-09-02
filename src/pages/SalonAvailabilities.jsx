@@ -1,6 +1,13 @@
 import ModalAction from "@/components/modal/ModalAction";
 import ModalAddAvailability from "@/components/modal/ModalAddAvailability";
 import ModalAddSpecialAvailability from "@/components/modal/ModalAddSpecialAvailability";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,7 +15,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2, MinusCircle } from "lucide-react";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const SalonAvailabilities = () => {
   const daysOfWeek = {
@@ -49,8 +56,8 @@ const SalonAvailabilities = () => {
   }
 
   async function createAvailability(availability) {
-      await axiosPrivate.post("/api/availabilities", availability);
-      getAvailabilities();
+    await axiosPrivate.post("/api/availabilities", availability);
+    getAvailabilities();
   }
 
   async function createSpecialAvailability(availability) {
@@ -95,13 +102,27 @@ const SalonAvailabilities = () => {
 
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col space-y-4">
-      <Button
-        variant="link"
-        className="justify-start h-0 p-0"
-        onClick={() => navigate(-1)}
-      >
-        Retour
-      </Button>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">Tableau de bord</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/salon">Salon</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/salon/availabilities">Disponibilités</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h1 className="text-3xl font-semibold">Mes disponibilités</h1>
       <Tabs defaultValue="weekly" className="space-y-4">
         <TabsList>
@@ -163,7 +184,7 @@ const SalonAvailabilities = () => {
                     id={id}
                     action={removeSpecialAvailability}
                     actionLabel="Supprimer"
-                    variant="destructive" 
+                    variant="destructive"
                     title="Supprimer une disponibilité spéciale"
                     description="Êtes-vous sûr de vouloir supprimer cette disponibilité spéciale ?"
                     trigger={<MinusCircle className="text-destructive" />}

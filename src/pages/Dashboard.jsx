@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -67,13 +68,15 @@ export default function Dashboard() {
 
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
-      <Button
-        variant="link"
-        className="justify-start h-0 p-0"
-        onClick={() => navigate(-1)}
-      >
-        Retour
-      </Button>
+      <Breadcrumb className="h-0 p-0">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">Tableau de bord</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <Tabs defaultValue="today" className="space-y-4">
         <TabsContent value="today">
           <h1 className="text-3xl font-semibold">
