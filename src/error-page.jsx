@@ -14,7 +14,7 @@ export default function ErrorPage() {
         </p>
       </div>
       <Link to="/" className="underline">
-        Go back to the home page
+        Go back to the dashboard
       </Link>
     </div>
   );
