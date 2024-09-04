@@ -9,6 +9,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/co
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import useLogout from "@/hooks/useLogout";
 import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const [appointments, setAppointments] = useState();
   const [apiLoading, setApiLoading] = useState(true);
+  const logout = useLogout();
 
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
@@ -59,6 +61,11 @@ export default function Dashboard() {
       .sort((a, b) => new Date(a.date) - new Date(b.date));
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
   useEffect(() => {
     getAppointmentsAsProvider();
   }, []);
@@ -67,7 +74,7 @@ export default function Dashboard() {
   const futureAppointments = appointments?.futureAppointments || [];
 
   return (
-    <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
+    <main className="w-full h-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col gap-4">
       <Breadcrumb className="h-0 p-0">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -197,6 +204,13 @@ export default function Dashboard() {
           )}
         </TabsContent>
       </Tabs>
+      <Button
+        variant="destructive"
+        onClick={handleLogout}
+        className="w-fit mt-auto"
+      >
+        Se déconnecter
+      </Button>
     </main>
   );
 }
