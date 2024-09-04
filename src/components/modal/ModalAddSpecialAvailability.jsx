@@ -70,6 +70,13 @@ const ModalAddSpecialAvailability = ({ createSpecialAvailability }) => {
     }
   };
 
+  const isDayOff = (date) => {
+    const formattedDate = DateTime.fromJSDate(date).toISODate();
+    const today = DateTime.now().toISODate(); 
+    return formattedDate < today;
+  };
+
+
   useEffect(() => {
     if (!open) {
       setAvailability();
@@ -108,6 +115,7 @@ const ModalAddSpecialAvailability = ({ createSpecialAvailability }) => {
                 mode="single"
                 selected={date}
                 onSelect={setDate}
+                disabled={isDayOff}
                 initialFocus
                 locale={fr}
               />
@@ -181,6 +189,7 @@ const ModalAddSpecialAvailability = ({ createSpecialAvailability }) => {
                 mode="single"
                 selected={date}
                 onSelect={setDate}
+                disabled={isDayOff}
                 initialFocus
                 locale={fr}
               />
