@@ -102,11 +102,11 @@ export default function RegisterPage() {
       </Button>
       <p className="text-muted text-xs font-light ">
         En créant un compte, vous acceptez les{" "}
-        <Button asChild variant="link" className="p-0 text-xs h-min">
+        <Button asChild variant="link" className="py-0 text-xs">
           <Link>termes et conditions d'utilisation</Link>
         </Button>{" "}
         et la{" "}
-        <Button asChild variant="link" className="p-0 text-xs h-min">
+        <Button asChild variant="link" className="py-0 text-xs">
           <Link>politique de confidentialité</Link>
         </Button>
         .

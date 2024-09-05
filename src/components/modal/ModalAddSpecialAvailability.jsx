@@ -87,7 +87,7 @@ const ModalAddSpecialAvailability = ({ createSpecialAvailability }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="link" className="h-min p-0">
+          <Button variant="link" className="py-0">
             Ajouter une disponibilité
           </Button>
         </DialogTrigger>
@@ -160,7 +160,7 @@ const ModalAddSpecialAvailability = ({ createSpecialAvailability }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="link" className="h-min p-0">
+        <Button variant="link" className="py-0">
           Ajouter une disponibilité
         </Button>
       </DrawerTrigger>

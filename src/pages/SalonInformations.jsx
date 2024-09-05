@@ -1,9 +1,16 @@
 import EditableInput from "@/components/EditableInput";
 import Error from "@/components/Error";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -219,6 +226,16 @@ export default function SalonInformations() {
               rendez-vous pendant un certain temps.
             </p>
           </div>
+        </div>
+        <div className="col-span-2">
+          <Label htmlFor="terms">Conditions de réservation</Label>
+          <Textarea
+            id="bookingTerms"
+            type="text"
+            defaultValue={prevInfos.bookingTerms}
+            onChange={handleChange}
+            className="text-lg whitespace-pre-line"
+          />
         </div>
         {editError && setTimeout(() => setEditError(null), 3000) && (
           <p className="text-destructive text-sm">{editError}</p>

@@ -19,7 +19,7 @@ const ProviderAppointment = ({
       <div className="flex flex-col md:flex-row md:gap-4">
         <Button
           variant="link"
-          className={`w-fit p-0 h-min ${past && "text-muted"}`}
+          className={`w-fit py-0 ${past && "text-muted"}`}
         >
           <a href={`tel:${appointment.client.phoneNumber}`}>
             {appointment.client.phoneNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}

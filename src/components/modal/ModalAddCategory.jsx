@@ -65,7 +65,7 @@ const ModalAddCategory = ({ createCategory }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="link" className="p-0 h-min">
+          <Button variant="link" className="py-0">
             Ajouter une catégorie
           </Button>
         </DialogTrigger>
@@ -110,7 +110,7 @@ const ModalAddCategory = ({ createCategory }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="link" className="p-0 h-min">
+        <Button variant="link" className="py-0">
           Ajouter une catégorie
         </Button>
       </DrawerTrigger>
