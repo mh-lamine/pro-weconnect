@@ -50,8 +50,8 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const { accessToken, isProvider } = await handleRegister(userInfos);
-      setAuth({ accessToken, isProvider });
+      const response = await handleRegister(userInfos);
+      setAuth(response.data);
       navigate(from, { replace: true });
     } catch (error) {
       if (error.response.status === 409) {
