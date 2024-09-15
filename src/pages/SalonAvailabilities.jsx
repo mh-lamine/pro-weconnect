@@ -54,6 +54,14 @@ const SalonAvailabilities = () => {
     setLoading(false);
   }
 
+  function formatDate(date) {
+    const formattedDate = DateTime.fromISO(date)
+      .setLocale("fr")
+      .toFormat("DDDD");
+
+    return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  }
+
   async function createAvailability(availability) {
     await axiosPrivate.post("/api/availabilities", availability);
     getAvailabilities();
@@ -158,10 +166,10 @@ const SalonAvailabilities = () => {
             specialAvailabilities.map(({ id, date, startTime, endTime }) => (
               <div
                 key={id}
-                className="flex flex-col sm:flex-row sm:items-center gap-4"
+                className="flex flex-col sm:flex-row sm:items-center gap-4 pt-4"
               >
-                <span className="flex-1 text-2xl font-medium">
-                  {DateTime.fromISO(date).toFormat("DDDD")}
+                <span className="flex-1 text-xl font-medium">
+                  {formatDate(date)}
                 </span>
                 <div className="flex flex-1 gap-2">
                   <div className="flex items-center justify-center">
