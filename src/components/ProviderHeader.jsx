@@ -7,7 +7,7 @@ export default function ProviderHeader({ name, address, profilePicture, coverIma
       className="hero w-full aspect-video relative max-h-[40vh] sm:max-h-[20vh] rounded-md overflow-hidden"
       style={{
         backgroundImage:
-          `url(${coverImage[0]})`,
+          `url(${coverImage && coverImage[0]})`,
       }}
     >
       <div className="hero-overlay bg-opacity-40"></div>
