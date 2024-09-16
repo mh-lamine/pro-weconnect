@@ -1,5 +1,6 @@
 import EditableInput from "@/components/EditableInput";
 import Error from "@/components/Error";
+import ProviderHeader from "@/components/ProviderHeader";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,10 +9,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -21,12 +24,18 @@ const PHONE_NUMBER_REGEX =
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+const validFileTypes = ["image/jpeg", "image/jpg", "image/png"];
+
 export default function SalonInformations() {
   const [prevInfos, setPrevInfos] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
   const [providerInfos, setProviderInfos] = useState();
+  const [profilePicture, setProfilePicture] = useState("");
+  const [refetch, setRefetch] = useState(0);
+
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState(false);
 
@@ -47,9 +56,24 @@ export default function SalonInformations() {
     setLoading(false);
   }
 
+  const fetchProfilePicture = async () => {
+    try {
+      const { data } = await axios.get(`/api/users/images/${prevInfos.id}`);
+      setProfilePicture(data[0]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     getProvider();
   }, []);
+
+  useEffect(() => {
+    if (prevInfos) {
+      fetchProfilePicture();
+    }
+  }, [refetch]);
 
   const handleChange = (e) => {
     setProviderInfos({ ...providerInfos, [e.target.id]: e.target.value });
@@ -95,6 +119,28 @@ export default function SalonInformations() {
     setEditLoading(false);
   };
 
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!validFileTypes.includes(file.type)) {
+      return alert("Invalid file type");
+    }
+
+    const formData = new FormData();
+    formData.append("profile", file);
+
+    try {
+      await axiosPrivate.post("/api/users/file", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setRefetch((prev) => prev + 1);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const formRef = useRef(null);
 
   const handleReset = () => {
@@ -136,6 +182,27 @@ export default function SalonInformations() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1 className="text-3xl font-semibold">Mes informations</h1>
+      <ProviderHeader
+        name={prevInfos.providerName}
+        address={prevInfos.address}
+        profilePicture={profilePicture && profilePicture}
+      />
+      <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
+        <Button asChild>
+          <Label htmlFor="profile" className=" w-full">
+            Changer ma photo de profil
+          </Label>
+        </Button>
+        <Input
+          className="hidden"
+          type="file"
+          id="profile"
+          onChange={handleUpload}
+        />
+        <Button className="block w-full">
+          Changer mes photos de couverture
+        </Button>
+      </div>
       <form className="space-y-2" ref={formRef}>
         <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
           <EditableInput
