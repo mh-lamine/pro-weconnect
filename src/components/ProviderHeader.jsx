@@ -1,13 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/utils/formatting";
 
-export default function ProviderHeader({ name, address, profilePicture }) {
+export default function ProviderHeader({ name, address, profilePicture, coverImage }) {
   return (
     <div
       className="hero w-full aspect-video relative max-h-[40vh] sm:max-h-[20vh] rounded-md overflow-hidden"
       style={{
         backgroundImage:
-          "url(https://images.unsplash.com/photo-1619607146034-5a05296c8f9a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          `url(${coverImage[0]})`,
       }}
     >
       <div className="hero-overlay bg-opacity-40"></div>
