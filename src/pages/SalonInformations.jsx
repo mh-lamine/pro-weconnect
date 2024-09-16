@@ -165,12 +165,12 @@ export default function SalonInformations() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1 className="text-3xl font-semibold">Mes informations</h1>
-      {/* <ProviderHeader
+      <ProviderHeader
         name={prevInfos.providerName}
         address={prevInfos.address}
         profilePicture={prevInfos.profilePicture}
         coverImage={prevInfos.coverImage}
-      /> */}
+      />
       <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
         <Button asChild>
           <Label htmlFor="profile" className=" w-full">
@@ -181,7 +181,7 @@ export default function SalonInformations() {
           className="hidden"
           type="file"
           id="profile"
-          // onChange={handleUpload}
+          onChange={handleUpload}
         />
         <Button asChild>
           <Label htmlFor="cover" className=" w-full">
@@ -192,7 +192,7 @@ export default function SalonInformations() {
           className="hidden"
           type="file"
           id="cover"
-          // onChange={handleUpload}
+          onChange={handleUpload}
         />
       </div>
       <form className="space-y-2" ref={formRef}>
