@@ -110,7 +110,7 @@ export default function SalonInformations() {
     }
 
     const formData = new FormData();
-    formData.append("profile", files[0]);
+    formData.append(id, files[0]);
 
     try {
       await axiosPrivate.post(`/api/users/${id}`, formData, {
