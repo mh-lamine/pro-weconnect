@@ -14,7 +14,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -53,6 +52,28 @@ export default function SalonInformations() {
     }
     setLoading(false);
   }
+
+  const rmprofile = async () => {
+    try {
+      await axiosPrivate.delete("/api/users/profile", {
+        profilePicture: null,
+      });
+      await getProvider();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const rmcover = async () => {
+    try {
+      await axiosPrivate.delete("/api/users/cover", {
+        coverImage: null,
+      });
+      await getProvider();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getProvider();
@@ -170,6 +191,8 @@ export default function SalonInformations() {
         address={prevInfos.address}
         profilePicture={prevInfos.profilePicture}
         coverImage={prevInfos.coverImage}
+        rmprofile={rmprofile}
+        rmcover={rmcover}
       />
       <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
         <Button asChild>
@@ -185,7 +208,7 @@ export default function SalonInformations() {
         />
         <Button asChild>
           <Label htmlFor="cover" className=" w-full">
-            Changer mes photos de couverture
+            Changer ma photo de couverture
           </Label>
         </Button>
         <Input

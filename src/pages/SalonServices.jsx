@@ -183,12 +183,12 @@ const SalonServices = () => {
                           <div className="divider divider-horizontal" />
                           <p>{service.price}€</p>
                           <Popover>
-                            <PopoverTrigger>
+                            <PopoverTrigger asChild>
                               <Button variant="ghost" className="ml-4">
                                 <EllipsisVertical />
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-fit flex flex-col gap-2">
+                            <PopoverContent align="end" className="w-fit flex flex-col gap-2">
                               <ModalUpdateService
                                 prevService={service}
                                 updateService={updateService}
