@@ -31,6 +31,8 @@ export default function App() {
     async function getUser() {
       try {
         const response = await axiosPrivate.get("/api/users");
+        !response.data.isProvider &&
+          window.location.replace("https://weconnect-rdv.fr");
         setAuth((prev) => ({ ...prev, ...response.data }));
       } catch (error) {
         console.error(error);
