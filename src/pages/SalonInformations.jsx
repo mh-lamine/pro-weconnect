@@ -100,7 +100,7 @@ export default function SalonInformations() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setEditLoading(true);
-    if (!providerInfos || !contactMethods) {
+    if (!providerInfos && !contactMethods) {
       setEditLoading(false);
       return;
     }
