@@ -24,9 +24,6 @@ const PHONE_NUMBER_REGEX =
 const EMAIL_REGEX =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
-const INSTAGRAM_REGEX =
-  /^https:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9_.]+\/?$/i;
-
 const validFileTypes = ["image/jpeg", "image/jpg", "image/png"];
 
 export default function SalonInformations() {
@@ -132,14 +129,6 @@ export default function SalonInformations() {
       !PHONE_NUMBER_REGEX.test(contactMethods.phoneNumber)
     ) {
       setEditError("Le numéro de téléphone n'est pas valide");
-      setEditLoading(false);
-      return;
-    }
-    if (
-      contactMethods.instagram &&
-      !INSTAGRAM_REGEX.test(contactMethods.instagram)
-    ) {
-      setEditError("Le lien Instagram n'est pas valide");
       setEditLoading(false);
       return;
     }
