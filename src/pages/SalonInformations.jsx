@@ -25,7 +25,7 @@ const EMAIL_REGEX =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 const INSTAGRAM_REGEX =
-  /^(http(s)?:\/\/)?(www\.)?instagram.com\/[a-zA-Z0-9_.]+$/;
+  /^https:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9_.]+\/?$/i;
 
 const validFileTypes = ["image/jpeg", "image/jpg", "image/png"];
 
@@ -381,10 +381,14 @@ export default function SalonInformations() {
               "Enregistrer les modifications"
             )}
           </Button>
-          <Button variant="outline" type="reset" onClick={()=>{
-            setProviderInfos();
-            setContactMethods(prevInfos.contactMethods);
-          }}>
+          <Button
+            variant="outline"
+            type="reset"
+            onClick={() => {
+              setProviderInfos();
+              setContactMethods(prevInfos.contactMethods);
+            }}
+          >
             Annuler
           </Button>
         </div>
