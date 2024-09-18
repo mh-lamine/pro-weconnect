@@ -24,6 +24,9 @@ const PHONE_NUMBER_REGEX =
 const EMAIL_REGEX =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
+const INSTAGRAM_REGEX =
+  /^(http(s)?:\/\/)?(www\.)?instagram.com\/[a-zA-Z0-9_.]+$/;
+
 const validFileTypes = ["image/jpeg", "image/jpg", "image/png"];
 
 export default function SalonInformations() {
@@ -96,14 +99,26 @@ export default function SalonInformations() {
       return;
     }
     if (
-      providerInfos.phoneNumber &&
-      !PHONE_NUMBER_REGEX.test(providerInfos.phoneNumber)
+      providerInfos.contactMethods.phoneNumber &&
+      !PHONE_NUMBER_REGEX.test(providerInfos.contactMethods.phoneNumber)
     ) {
       setEditError("Le numéro de téléphone n'est pas valide");
       setEditLoading(false);
       return;
     }
-    if (providerInfos.email && !EMAIL_REGEX.test(providerInfos.email)) {
+    if (
+      providerInfos.contactMethods.instagram &&
+      !INSTAGRAM_REGEX.test(providerInfos.contactMethods.instagram)
+    ) {
+      setEditError("Le lien Instagram n'est pas valide");
+      setEditLoading(false);
+      return;
+    }
+
+    if (
+      providerInfos.contactMethods.email &&
+      !EMAIL_REGEX.test(providerInfos.contactMethods.email)
+    ) {
       setEditError("L'adresse email n'est pas valide");
       setEditLoading(false);
       return;
@@ -219,19 +234,12 @@ export default function SalonInformations() {
         />
       </div>
       <form className="space-y-2" ref={formRef}>
-        <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
+        <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4 mb-8">
           <EditableInput
             id="providerName"
             label="Nom du salon"
             type="text"
             defaultValue={prevInfos.providerName}
-            handleChange={handleChange}
-          />
-          <EditableInput
-            id="phoneNumber"
-            label="Téléphone"
-            type="tel"
-            defaultValue={prevInfos.phoneNumber}
             handleChange={handleChange}
           />
           <EditableInput
@@ -241,14 +249,35 @@ export default function SalonInformations() {
             defaultValue={prevInfos.address}
             handleChange={handleChange}
           />
+        </div>
+        <div className="divider divider-start text-muted">
+          Par quels moyens vos clients peuvent vous contacter ?
+        </div>
+        <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
           <EditableInput
-            id="email"
+            id="contactMethods.phoneNumber"
+            label="Téléphone du salon"
+            type="tel"
+            defaultValue={prevInfos.contactMethods.phoneNumber}
+            handleChange={handleChange}
+          />
+          <EditableInput
+            id="contactMethods.instagram"
+            label="Instagram"
+            type="text"
+            defaultValue={prevInfos.contactMethods.instagram}
+            placeholder={"copiez le lien de votre profil Instagram"}
+            handleChange={handleChange}
+          />
+          <EditableInput
+            id="contactMethods.email"
             label="Email"
             type="email"
-            defaultValue={prevInfos.email}
+            defaultValue={prevInfos.contactMethods.email}
             handleChange={handleChange}
           />
         </div>
+        <div className="divider" />
         <div>
           <Label htmlFor="autoAccept">Confirmation automatique</Label>
           <div className="bg-white rounded-md px-3 py-2 space-y-4">
