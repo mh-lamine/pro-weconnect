@@ -35,7 +35,7 @@ export default function SalonInformations() {
   const [loading, setLoading] = useState(true);
 
   const [providerInfos, setProviderInfos] = useState();
-
+  const [contactMethods, setContactMethods] = useState();
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState(false);
 
@@ -45,15 +45,17 @@ export default function SalonInformations() {
 
   async function getProvider() {
     try {
-      const response = await axiosPrivate.get("/api/users");
-      setPrevInfos(response.data);
+      const { data } = await axiosPrivate.get("/api/users");
+      setPrevInfos(data);
+      return data;
     } catch (error) {
       setError(error);
       if (error.response?.status === 401) {
         navigate("/login", { state: { from: location }, replace: true });
       }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   const rmprofile = async () => {
@@ -79,59 +81,85 @@ export default function SalonInformations() {
   };
 
   useEffect(() => {
-    getProvider();
+    async function getData() {
+      const data = await getProvider();
+      setContactMethods(data.contactMethods);
+    }
+    getData();
   }, []);
 
   const handleChange = (e) => {
-    setProviderInfos({ ...providerInfos, [e.target.id]: e.target.value });
+    const { id, name, value } = e.target;
+    if (name === "contactMethod") {
+      setContactMethods((prev) => ({ ...prev, [id]: value }));
+      return;
+    }
+    setProviderInfos({ ...providerInfos, [id]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setEditLoading(true);
-    const hasChanges = Object.keys(providerInfos).some(
-      (key) => providerInfos[key] !== prevInfos[key]
-    );
-
-    if (!hasChanges) {
-      setProviderInfos();
+    if (!providerInfos || !contactMethods) {
       setEditLoading(false);
       return;
     }
+    if (providerInfos) {
+      const hasChanges = Object.keys(providerInfos).some(
+        (key) => providerInfos[key] !== prevInfos[key]
+      );
+
+      if (!hasChanges) {
+        setProviderInfos();
+        setEditLoading(false);
+        return;
+      }
+    }
+    if (contactMethods) {
+      const hasChanges = Object.keys(contactMethods).some(
+        (key) => contactMethods[key] !== prevInfos.contactMethods[key]
+      );
+
+      if (!hasChanges) {
+        setContactMethods(prevInfos.contactMethods);
+        setEditLoading(false);
+        return;
+      }
+    }
+
     if (
-      providerInfos.contactMethods.phoneNumber &&
-      !PHONE_NUMBER_REGEX.test(providerInfos.contactMethods.phoneNumber)
+      contactMethods.phoneNumber &&
+      !PHONE_NUMBER_REGEX.test(contactMethods.phoneNumber)
     ) {
       setEditError("Le numéro de téléphone n'est pas valide");
       setEditLoading(false);
       return;
     }
     if (
-      providerInfos.contactMethods.instagram &&
-      !INSTAGRAM_REGEX.test(providerInfos.contactMethods.instagram)
+      contactMethods.instagram &&
+      !INSTAGRAM_REGEX.test(contactMethods.instagram)
     ) {
       setEditError("Le lien Instagram n'est pas valide");
       setEditLoading(false);
       return;
     }
 
-    if (
-      providerInfos.contactMethods.email &&
-      !EMAIL_REGEX.test(providerInfos.contactMethods.email)
-    ) {
+    if (contactMethods.email && !EMAIL_REGEX.test(contactMethods.email)) {
       setEditError("L'adresse email n'est pas valide");
       setEditLoading(false);
       return;
     }
-
     try {
-      await axiosPrivate.patch("/api/users", providerInfos);
+      await axiosPrivate.patch("/api/users", {
+        ...providerInfos,
+        contactMethods,
+      });
       await getProvider();
     } catch (error) {
       if (!error.response) {
         setEditError("Une erreur est survenue, veuillez réessayer plus tard");
       } else {
-        setEditError(error.response.data.message);
+        console.error(error.response.data.message);
       }
     }
     setProviderInfos();
@@ -157,15 +185,6 @@ export default function SalonInformations() {
       getProvider();
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const formRef = useRef(null);
-
-  const handleReset = () => {
-    if (formRef.current) {
-      formRef.current.reset();
-      setProviderInfos();
     }
   };
 
@@ -233,7 +252,7 @@ export default function SalonInformations() {
           onChange={handleUpload}
         />
       </div>
-      <form className="space-y-2" ref={formRef}>
+      <form className="space-y-2">
         <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4 mb-8">
           <EditableInput
             id="providerName"
@@ -255,14 +274,16 @@ export default function SalonInformations() {
         </div>
         <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
           <EditableInput
-            id="contactMethods.phoneNumber"
+            id="phoneNumber"
+            name="contactMethod"
             label="Téléphone du salon"
             type="tel"
             defaultValue={prevInfos.contactMethods.phoneNumber}
             handleChange={handleChange}
           />
           <EditableInput
-            id="contactMethods.instagram"
+            id="instagram"
+            name="contactMethod"
             label="Instagram"
             type="text"
             defaultValue={prevInfos.contactMethods.instagram}
@@ -270,7 +291,8 @@ export default function SalonInformations() {
             handleChange={handleChange}
           />
           <EditableInput
-            id="contactMethods.email"
+            id="email"
+            name="contactMethod"
             label="Email"
             type="email"
             defaultValue={prevInfos.contactMethods.email}
@@ -348,23 +370,24 @@ export default function SalonInformations() {
             className="text-lg whitespace-pre-line"
           />
         </div>
-        {editError && setTimeout(() => setEditError(null), 3000) && (
+        {editError && setTimeout(() => setEditError(null), 10000) && (
           <p className="text-destructive text-sm">{editError}</p>
         )}
-        {providerInfos && (
-          <>
-            <Button onClick={handleSubmit} disabled={editLoading && true}>
-              {editLoading ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                "Enregistrer les modifications"
-              )}
-            </Button>
-            <Button variant="outline" className="block" onClick={handleReset}>
-              Annuler les modifications
-            </Button>
-          </>
-        )}
+        <div className="flex gap-2">
+          <Button onClick={handleSubmit} disabled={editLoading && true}>
+            {editLoading ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "Enregistrer les modifications"
+            )}
+          </Button>
+          <Button variant="outline" type="reset" onClick={()=>{
+            setProviderInfos();
+            setContactMethods(prevInfos.contactMethods);
+          }}>
+            Annuler
+          </Button>
+        </div>
       </form>
     </main>
   );
