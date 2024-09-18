@@ -287,7 +287,7 @@ export default function SalonInformations() {
             label="Instagram"
             type="text"
             defaultValue={prevInfos.contactMethods.instagram}
-            placeholder={"copiez le lien de votre profil Instagram"}
+            placeholder={"@weconnect_off"}
             handleChange={handleChange}
           />
           <EditableInput
