@@ -25,6 +25,7 @@ import { Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { convertToMinutes } from "@/utils/formatting";
 
 const ModalUpdateService = ({ prevService, updateService }) => {
   const [open, setOpen] = useState(false);
