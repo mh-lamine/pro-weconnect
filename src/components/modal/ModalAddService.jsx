@@ -25,6 +25,7 @@ import { Loader2, PlusCircle } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { convertToMinutes } from "@/utils/formatting";
 
 const ModalAddService = ({ providerCategoryId, createService }) => {
   const [open, setOpen] = useState(false);
@@ -37,9 +38,12 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Convertir en nombre pour les champs 'price' et 'duration'
     const parsedValue =
-      name === "price" || name === "duration" ? parseFloat(value) : value;
+      name === "price"
+        ? parseFloat(value)
+        : name === "duration"
+        ? parseFloat(convertToMinutes(value))
+        : value;
 
     setService({ ...service, [name]: parsedValue });
   };
@@ -94,7 +98,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
               />
             </div>
             <div>
-              <Label htmlFor="price">Prix (en €)</Label>
+              <Label htmlFor="price">Prix (sans €)</Label>
               <Input
                 id="price"
                 name="price"
@@ -107,7 +111,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
               <Input
                 id="duration"
                 name="duration"
-                type="number"
+                type="time"
                 onChange={handleChange}
               />
             </div>

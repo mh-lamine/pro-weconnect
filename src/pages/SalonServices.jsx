@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { convertToHhMm } from "@/utils/formatting";
 import { EllipsisVertical, EyeOffIcon, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -187,7 +188,7 @@ const SalonServices = () => {
                           <p>{service.description}</p>
                         </div>
                         <div className="flex flex-col-reverse gap-2 items-center md:flex-row md:gap-0">
-                          <p>{service.duration}mn</p>
+                          <p>{convertToHhMm(service.duration)}</p>
                           <div className="divider divider-horizontal" />
                           <p>{service.price}€</p>
                           <Popover>
@@ -260,7 +261,7 @@ const SalonServices = () => {
                             )}
                             {!category.isActive && (
                               <div className="flex items-center">
-                                <p>{service.duration}mn</p>
+                                <p>{convertToHhMm(service.duration)}</p>
                                 <div className="divider divider-horizontal" />
                                 <p>{service.price}€</p>
                               </div>

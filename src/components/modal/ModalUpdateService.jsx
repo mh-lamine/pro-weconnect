@@ -38,7 +38,11 @@ const ModalUpdateService = ({ prevService, updateService }) => {
     const { name, value } = e.target;
 
     const parsedValue =
-      name === "price" || name === "duration" ? parseFloat(value) : value;
+      name === "price"
+        ? parseFloat(value)
+        : name === "duration"
+        ? parseFloat(convertToMinutes(value))
+        : value;
 
     setService({ ...service, [name]: parsedValue });
   };
@@ -97,7 +101,7 @@ const ModalUpdateService = ({ prevService, updateService }) => {
               />
             </div>
             <div>
-              <Label htmlFor="price">Prix (en €)</Label>
+              <Label htmlFor="price">Prix (sans €)</Label>
               <Input
                 id="price"
                 name="price"
@@ -111,7 +115,7 @@ const ModalUpdateService = ({ prevService, updateService }) => {
               <Input
                 id="duration"
                 name="duration"
-                type="number"
+                type="time"
                 defaultValue={prevService.duration}
                 onChange={handleChange}
               />
