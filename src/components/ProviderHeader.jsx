@@ -37,18 +37,17 @@ export default function ProviderHeader({
       <div className="hero-overlay bg-opacity-40"></div>
       <div className="hero-content text-neutral-content mt-auto mr-auto">
         <div className="flex items-center space-x-4">
-          <Avatar className="w-14 h-14">
-            <AvatarImage
-              src={profilePicture}
-              className="border-2 rounded-full border-primary-800"
-            />
-            <AvatarFallback className="text-xl">
+          <Avatar className="w-16 h-16">
+            <AvatarImage src={profilePicture} />
+            <AvatarFallback className="text-2xl">
               {name && getInitials(name)}
             </AvatarFallback>
           </Avatar>
-          <div className="ml-4">
-            <h1 className="text-3xl font-semibold">{name}</h1>
-            <p>{address}</p>
+          <div className="ml-4 space-y-1">
+            <h1 className="text-2xl font-semibold bg-muted px-2 py-1 rounded-sm">
+              {name}
+            </h1>
+            <p className="bg-muted px-2 py-1 rounded-sm w-fit">{address}</p>
           </div>
         </div>
       </div>

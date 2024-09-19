@@ -103,7 +103,9 @@ export default function SalonInformations() {
       toast("Aucune modification n'a été effectuée");
       return;
     }
-    if (providerInfos) {
+
+    console.log(providerInfos, contactMethods);
+    if (providerInfos && !contactMethods) {
       const hasChanges = Object.keys(providerInfos).some(
         (key) => providerInfos[key] !== prevInfos[key]
       );
@@ -115,7 +117,7 @@ export default function SalonInformations() {
         return;
       }
     }
-    if (contactMethods) {
+    if (contactMethods && !providerInfos) {
       const hasChanges = Object.keys(contactMethods).some(
         (key) => contactMethods[key] !== prevInfos.contactMethods[key]
       );
@@ -148,7 +150,7 @@ export default function SalonInformations() {
         contactMethods,
       });
       await getProvider();
-      toast("Modifications enregistrées avec succès");
+      toast("Modifications enregistrées");
     } catch (error) {
       if (!error.response) {
         toast.error("Une erreur est survenue, veuillez réessayer plus tard");
@@ -264,8 +266,8 @@ export default function SalonInformations() {
             handleChange={handleChange}
           />
         </div>
-        <div className="divider divider-start text-muted">
-          Par quels moyens vos clients peuvent vous contacter ?
+        <div className="divider divider-start">
+          <p className="text-muted">Moyens de contact</p>
         </div>
         <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
           <EditableInput
