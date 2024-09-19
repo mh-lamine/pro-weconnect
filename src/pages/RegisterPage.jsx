@@ -57,7 +57,7 @@ export default function RegisterPage() {
       if (error.response.status === 409) {
         setError("Ce numéro de téléphone est déjà utilisé");
       } else {
-        setError("Une erreur est survenue, veuillez réessayer plus tard");
+        setError("Une erreur est survenue, veuillez contacter le support");
       }
     }
     setLoading(false);

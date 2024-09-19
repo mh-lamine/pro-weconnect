@@ -51,7 +51,7 @@ const ModalAction = ({
       }
       setOpen(false);
     } catch (error) {
-      toast.error("Une erreur est survenue, veuillez réessayer plus tard.");
+      toast.error("Une erreur est survenue, veuillez contacter le support.");
     }
     setLoading(false);
   };

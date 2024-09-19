@@ -39,7 +39,7 @@ export default function LoginPage() {
       if (error.response.status === 401) {
         setError("Numéro de téléphone ou mot de passe incorrect");
       } else {
-        setError("Une erreur est survenue, veuillez réessayer plus tard");
+        setError("Une erreur est survenue, veuillez contacter le support");
       }
     }
     setLoading(false);

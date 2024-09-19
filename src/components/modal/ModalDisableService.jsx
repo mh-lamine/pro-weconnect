@@ -38,7 +38,7 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
       await disableService(id, providerCategoryId);
       setOpen(false);
     } catch (error) {
-      setError("Une erreur est survenue, veuillez réessayer plus tard.");
+      setError("Une erreur est survenue, veuillez contacter le support.");
     }
     setLoading(false);
   };

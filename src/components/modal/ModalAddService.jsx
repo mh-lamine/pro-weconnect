@@ -56,7 +56,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
       await createService({ providerCategoryId, ...service });
       setOpen(false);
     } catch (error) {
-      setError("Une erreur est survenue, veuillez réessayer plus tard.");
+      setError("Une erreur est survenue, veuillez contacter le support.");
     }
     setLoading(false);
   };

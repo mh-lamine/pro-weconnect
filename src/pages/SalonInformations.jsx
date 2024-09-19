@@ -153,7 +153,7 @@ export default function SalonInformations() {
       toast("Modifications enregistrées");
     } catch (error) {
       if (!error.response) {
-        toast.error("Une erreur est survenue, veuillez réessayer plus tard");
+        toast.error("Une erreur est survenue, veuillez contacter le support");
       } else {
         toast.error(error.response.data.message);
       }
@@ -181,7 +181,12 @@ export default function SalonInformations() {
       getProvider();
       toast.success("Photo de profil mise à jour avec succès");
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response.status === 413) {
+        toast.error("Le fichier est trop volumineux");
+      } else {
+        console.error(error.response.data.message);
+        toast.error("Une erreur est survenue, veuillez contacter le support");
+      }
     }
   };
 
