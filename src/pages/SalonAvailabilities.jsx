@@ -194,6 +194,7 @@ const SalonAvailabilities = () => {
                     variant="destructive"
                     title="Supprimer une disponibilité spéciale"
                     description="Êtes-vous sûr de vouloir supprimer cette disponibilité spéciale ?"
+                    successMessage={"Disponibilité spéciale supprimée"}
                     trigger={<MinusCircle className="text-destructive" />}
                     triggerVariant="ghost"
                   />
@@ -250,6 +251,7 @@ const DailyAvailability = ({
                   variant="destructive"
                   title="Supprimer un créneau"
                   description="Êtes-vous sûr de vouloir supprimer ce créneau de disponibilité ?"
+                  successMessage={"Créneau supprimé"}
                   trigger={<MinusCircle className="text-destructive" />}
                   triggerVariant="ghost"
                 />

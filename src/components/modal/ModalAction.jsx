@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/drawer";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const ModalAction = ({
   id,
@@ -29,6 +30,7 @@ const ModalAction = ({
   actionLabel,
   title,
   description,
+  successMessage = null,
   trigger,
   variant = "outline",
   triggerVariant,
@@ -44,9 +46,12 @@ const ModalAction = ({
     setLoading(true);
     try {
       await action(id);
+      {
+        successMessage && toast.success(successMessage);
+      }
       setOpen(false);
     } catch (error) {
-      setError("Une erreur est survenue, veuillez réessayer plus tard.");
+      toast.error("Une erreur est survenue, veuillez réessayer plus tard.");
     }
     setLoading(false);
   };

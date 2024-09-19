@@ -17,6 +17,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const PHONE_NUMBER_REGEX =
   /^(?:(?:\+|00)33\s?[1-9](?:[\s.-]?\d{2}){4}|0[1-9](?:[\s.-]?\d{2}){4})$/;
@@ -99,6 +100,7 @@ export default function SalonInformations() {
     setEditLoading(true);
     if (!providerInfos && !contactMethods) {
       setEditLoading(false);
+      toast("Aucune modification n'a été effectuée");
       return;
     }
     if (providerInfos) {
@@ -109,6 +111,7 @@ export default function SalonInformations() {
       if (!hasChanges) {
         setProviderInfos();
         setEditLoading(false);
+        toast("Aucune modification n'a été effectuée");
         return;
       }
     }
@@ -120,6 +123,7 @@ export default function SalonInformations() {
       if (!hasChanges) {
         setContactMethods(prevInfos.contactMethods);
         setEditLoading(false);
+        toast("Aucune modification n'a été effectuée");
         return;
       }
     }
@@ -128,13 +132,13 @@ export default function SalonInformations() {
       contactMethods.phoneNumber &&
       !PHONE_NUMBER_REGEX.test(contactMethods.phoneNumber)
     ) {
-      setEditError("Le numéro de téléphone n'est pas valide");
+      toast.error("Le numéro de téléphone n'est pas valide");
       setEditLoading(false);
       return;
     }
 
     if (contactMethods.email && !EMAIL_REGEX.test(contactMethods.email)) {
-      setEditError("L'adresse email n'est pas valide");
+      toast.error("L'adresse email n'est pas valide");
       setEditLoading(false);
       return;
     }
@@ -144,11 +148,12 @@ export default function SalonInformations() {
         contactMethods,
       });
       await getProvider();
+      toast("Modifications enregistrées avec succès");
     } catch (error) {
       if (!error.response) {
-        setEditError("Une erreur est survenue, veuillez réessayer plus tard");
+        toast.error("Une erreur est survenue, veuillez réessayer plus tard");
       } else {
-        console.error(error.response.data.message);
+        toast.error(error.response.data.message);
       }
     }
     setProviderInfos();
@@ -159,7 +164,7 @@ export default function SalonInformations() {
     const { id, files } = e.target;
 
     if (!validFileTypes.includes(files[0].type)) {
-      return alert("Invalid file type");
+      toast.error("Le format du fichier n'est pas valide");
     }
 
     const formData = new FormData();
@@ -172,8 +177,9 @@ export default function SalonInformations() {
         },
       });
       getProvider();
+      toast.success("Photo de profil mise à jour avec succès");
     } catch (error) {
-      console.error(error);
+      toast.error(error.response.data.message);
     }
   };
 

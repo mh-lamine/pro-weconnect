@@ -14,13 +14,14 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ErrorPage from "./pages/ErrorPage";
 import logo from "/weconnect-no-bg.svg";
+import { Toaster } from "sonner";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Salon = lazy(() => import("./pages/Salon"));
 const SalonInformations = lazy(() => import("./pages/SalonInformations"));
 const SalonAvailabilities = lazy(() => import("./pages/SalonAvailabilities"));
 const SalonServices = lazy(() => import("./pages/SalonServices"));
-const SalonPhotos = lazy(() => import("./pages/SalonPhotos"));
 
 export default function App() {
   const { setAuth } = useAuth();
@@ -47,72 +48,84 @@ export default function App() {
   }
 
   return (
-    <Routes>
-      {/* auth routes */}
-      <Route element={<AuthLayout />}>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
-      </Route>
+    <>
+      <Routes>
+        {/* auth routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+        </Route>
 
-      {/* protected routes */}
-      <Route element={<PersistLogin />}>
-        <Route element={<RequireAuth />}>
-          <Route element={<Layout />}>
-            <Route
-              path="/"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <Dashboard />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <Salon />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon/informations"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <SalonInformations />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon/availabilities"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <SalonAvailabilities />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon/services"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <SalonServices />
-                </Suspense>
-              }
-            />
-            <Route
-              path="salon/photos"
-              element={
-                <Suspense fallback={<PageLoader />}>
-                  <SalonPhotos />
-                </Suspense>
-              }
-            />
+        {/* protected routes */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route element={<Layout />}>
+              <Route
+                path="/"
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <Dashboard />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="salon"
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <Salon />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="salon/informations"
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <SalonInformations />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="salon/availabilities"
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <SalonAvailabilities />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="salon/services"
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <SalonServices />
+                  </Suspense>
+                }
+              />
+            </Route>
           </Route>
         </Route>
-      </Route>
 
-      {/* error routes */}
-      <Route path="*" element={<ErrorPage />} />
-    </Routes>
+        {/* error routes */}
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+      <Toaster
+        position="top-right"
+        icons={{
+          success: <CheckCircle />,
+          error: <AlertCircle />,
+        }}
+        toastOptions={{
+          style: {
+            display: "flex",
+            gap: "2em",
+            whiteSpace: "pre-line",
+          },
+          classNames: {
+            error: "bg-destructive text-light",
+            success: "bg-success text-light",
+          },
+        }}
+      />
+    </>
   );
 }
 

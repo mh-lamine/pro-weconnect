@@ -78,6 +78,7 @@ const ProviderAppointment = ({
             actionLabel={"Accepter"}
             title={"Accepter le rendez-vous"}
             description={"Êtes-vous sûr de vouloir accepter ce rendez-vous ?"}
+            successMessage={"Rendez-vous accepté"}
             trigger={"Accepter"}
             variant={"success"}
           />
@@ -90,6 +91,7 @@ const ProviderAppointment = ({
             actionLabel={"Refuser"}
             title={"Refuser le rendez-vous"}
             description={"Êtes-vous sûr de vouloir refuser ce rendez-vous ?"}
+            successMessage={"Rendez-vous refusé"}
             trigger={"Refuser"}
             variant={"destructive"}
           />

@@ -3,7 +3,13 @@ import ModalAddCategory from "@/components/modal/ModalAddCategory";
 import ModalAddService from "@/components/modal/ModalAddService";
 import ModalDisableService from "@/components/modal/ModalDisableService";
 import ModalUpdateService from "@/components/modal/ModalUpdateService";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -14,6 +20,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { EllipsisVertical, EyeOffIcon, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const SalonServices = () => {
   const [categories, setCategories] = useState();
@@ -82,6 +89,7 @@ const SalonServices = () => {
     try {
       await axiosPrivate.put(`/api/providerService/${id}`, service);
       getCategories();
+      toast.success("Service mis à jour");
     } catch (error) {
       setApiError(error);
     }
@@ -188,7 +196,10 @@ const SalonServices = () => {
                                 <EllipsisVertical />
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent align="end" className="w-fit flex flex-col gap-2">
+                            <PopoverContent
+                              align="end"
+                              className="w-fit flex flex-col gap-2"
+                            >
                               <ModalUpdateService
                                 prevService={service}
                                 updateService={updateService}
