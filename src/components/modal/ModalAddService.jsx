@@ -174,11 +174,11 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
             />
           </div>
           <div>
-            <Label htmlFor="duration">Durée (en minutes)</Label>
+            <Label htmlFor="duration">Durée (heure:minute)</Label>
             <Input
               id="duration"
               name="duration"
-              type="number"
+              type="time"
               onChange={handleChange}
             />
           </div>

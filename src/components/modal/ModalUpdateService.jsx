@@ -112,7 +112,7 @@ const ModalUpdateService = ({ prevService, updateService }) => {
               />
             </div>
             <div>
-              <Label htmlFor="duration">Durée (en minutes)</Label>
+              <Label htmlFor="duration">Durée (heure:minute)</Label>
               <Input
                 id="duration"
                 name="duration"
