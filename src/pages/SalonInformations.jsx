@@ -104,7 +104,6 @@ export default function SalonInformations() {
       return;
     }
 
-    console.log(providerInfos, contactMethods);
     if (providerInfos && !contactMethods) {
       const hasChanges = Object.keys(providerInfos).some(
         (key) => providerInfos[key] !== prevInfos[key]

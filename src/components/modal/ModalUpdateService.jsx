@@ -25,7 +25,7 @@ import { Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { convertToMinutes } from "@/utils/formatting";
+import { convertToHhMm, convertToMinutes } from "@/utils/formatting";
 
 const ModalUpdateService = ({ prevService, updateService }) => {
   const [open, setOpen] = useState(false);
@@ -186,12 +186,11 @@ const ModalUpdateService = ({ prevService, updateService }) => {
             />
           </div>
           <div>
-            <Label htmlFor="duration">Durée (en minutes)</Label>
+            <Label htmlFor="duration">Durée (heure:minute)</Label>
             <Input
               id="duration"
               name="duration"
-              type="number"
-              defaultValue={prevService.duration}
+              type="time"
               onChange={handleChange}
             />
           </div>
