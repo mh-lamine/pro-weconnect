@@ -44,7 +44,7 @@ export default function ProviderHeader({
             </AvatarFallback>
           </Avatar>
           <div className="ml-4 space-y-1">
-            <h1 className="text-2xl font-semibold bg-muted px-2 py-1 rounded-sm">
+            <h1 className="text-2xl font-semibold bg-muted px-2 py-1 rounded-sm w-fit">
               {name}
             </h1>
             <p className="bg-muted px-2 py-1 rounded-sm w-fit">{address}</p>
