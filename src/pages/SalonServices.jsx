@@ -2,6 +2,7 @@ import ModalAction from "@/components/modal/ModalAction";
 import ModalAddCategory from "@/components/modal/ModalAddCategory";
 import ModalAddService from "@/components/modal/ModalAddService";
 import ModalDisableService from "@/components/modal/ModalDisableService";
+import ModalUpdateCategory from "@/components/modal/ModalUpdateCategory";
 import ModalUpdateService from "@/components/modal/ModalUpdateService";
 import {
   Breadcrumb,
@@ -18,14 +19,13 @@ import {
 } from "@/components/ui/popover";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { convertToHhMm } from "@/utils/formatting";
-import { EllipsisVertical, EyeOffIcon, Loader2 } from "lucide-react";
+import { EllipsisVertical, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const SalonServices = () => {
   const [categories, setCategories] = useState();
-  const [apiError, setApiError] = useState();
   const [loading, setLoading] = useState(true);
 
   const axiosPrivate = useAxiosPrivate();
@@ -44,7 +44,7 @@ const SalonServices = () => {
       if (error.response?.status === 401) {
         navigate("/login", { state: { from: location }, replace: true });
       } else {
-        setError(error);
+        toast.error(error.message);
       }
     }
     setLoading(false);
@@ -55,7 +55,7 @@ const SalonServices = () => {
       await axiosPrivate.post("/api/providerService", service);
       getCategories();
     } catch (error) {
-      setApiError(error);
+      toast.error(error.message);
     }
   }
 
@@ -64,7 +64,7 @@ const SalonServices = () => {
       await axiosPrivate.post("/api/providerCategory", category);
       getCategories();
     } catch (error) {
-      setApiError(error);
+      toast.error(error.message);
     }
   }
 
@@ -73,7 +73,7 @@ const SalonServices = () => {
       await axiosPrivate.put(`/api/providerService/${id}`, { isActive: true });
       getCategories();
     } catch (error) {
-      setApiError(error);
+      toast.error(error.message);
     }
   }
 
@@ -82,7 +82,7 @@ const SalonServices = () => {
       await axiosPrivate.put(`/api/providerCategory/${id}`, { isActive: true });
       getCategories();
     } catch (error) {
-      setApiError(error);
+      toast.error(error.message);
     }
   }
 
@@ -92,7 +92,17 @@ const SalonServices = () => {
       getCategories();
       toast.success("Service mis à jour");
     } catch (error) {
-      setApiError(error);
+      toast.error(error.message);
+    }
+  }
+
+  async function updateCategory(id, category) {
+    try {
+      await axiosPrivate.put(`/api/providerCategory/${id}`, category);
+      getCategories();
+      toast.success("Catégorie mise à jour");
+    } catch (error) {
+      toast.error(error.message);
     }
   }
 
@@ -104,7 +114,7 @@ const SalonServices = () => {
       });
       getCategories();
     } catch (error) {
-      setApiError(error);
+      toast.error(error.message);
     }
   }
 
@@ -115,11 +125,9 @@ const SalonServices = () => {
       });
       getCategories();
     } catch (error) {
-      setApiError(error);
+      toast.error(error.message);
     }
   }
-
-  //FIXME: display apiError in a toast
 
   if (loading) {
     return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
@@ -152,137 +160,168 @@ const SalonServices = () => {
         <h1 className="text-3xl font-semibold">Mes prestations</h1>
         <ModalAddCategory createCategory={createCategory} />
       </div>
-      {categories?.map(
-        (category) =>
-          category.isActive && (
-            <div key={category.id} className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-medium">{category.name}</h2>
-                <div className="space-x-2">
-                  <ModalAddService
-                    providerCategoryId={category.id}
-                    createService={createService}
-                  />
-                  <ModalAction
-                    id={category.id}
-                    action={disableCategory}
-                    actionLabel="Retirer"
-                    variant="destructive"
-                    title="Retirer la catégorie"
-                    description="Toutes les prestations associées seront retirées."
-                    trigger={<EyeOffIcon className="text-destructive" />}
-                    triggerVariant="ghost"
-                  />
+      {categories
+        ?.sort((a, b) => a.name - b.name)
+        .map(
+          (category) =>
+            category.isActive && (
+              <div key={category.id} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-medium">{category.name}</h2>
+                  <div className="space-x-2">
+                    <ModalAddService
+                      providerCategoryId={category.id}
+                      createService={createService}
+                    />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" className="ml-4">
+                          <EllipsisVertical />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        align="end"
+                        className="w-fit flex flex-col gap-2"
+                      >
+                        <ModalUpdateCategory
+                          category={category}
+                          updateCategory={updateCategory}
+                        />
+                        <ModalAction
+                          id={category.id}
+                          action={disableCategory}
+                          actionLabel="Retirer"
+                          variant="destructive"
+                          title="Retirer la catégorie"
+                          description="Toutes les prestations associées seront retirées."
+                          trigger="Retirer"
+                          triggerVariant="destructive"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
+                <ul className="space-y-2">
+                  {category.services
+                    .sort((a, b) => a.name - b.name)
+                    .map(
+                      (service) =>
+                        service.isActive && (
+                          <li
+                            key={service.id}
+                            className="flex items-start justify-between gap-10 w-full rounded-md p-4 pr-0 bg-gray-100"
+                          >
+                            <div>
+                              <h3 className="text-xl">{service.name}</h3>
+                              <p>{service.description}</p>
+                            </div>
+                            <div className="flex flex-col-reverse gap-2 items-center md:flex-row md:gap-0">
+                              <p>{convertToHhMm(service.duration)}</p>
+                              <div className="divider divider-horizontal" />
+                              <p>{service.price}€</p>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button variant="ghost" className="ml-4">
+                                    <EllipsisVertical />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                  align="end"
+                                  className="w-fit flex flex-col gap-2"
+                                >
+                                  <ModalUpdateService
+                                    prevService={service}
+                                    updateService={updateService}
+                                  />
+                                  <ModalDisableService
+                                    id={service.id}
+                                    providerCategoryId={category.id}
+                                    disableService={disableService}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </div>
+                          </li>
+                        )
+                    )}
+                </ul>
               </div>
-              <ul className="space-y-2">
-                {category.services.map(
-                  (service) =>
-                    service.isActive && (
-                      <li
-                        key={service.id}
-                        className="flex items-start justify-between gap-10 w-full rounded-md p-4 pr-0 bg-gray-100"
-                      >
-                        <div>
-                          <h3 className="text-xl">{service.name}</h3>
-                          <p>{service.description}</p>
-                        </div>
-                        <div className="flex flex-col-reverse gap-2 items-center md:flex-row md:gap-0">
-                          <p>{convertToHhMm(service.duration)}</p>
-                          <div className="divider divider-horizontal" />
-                          <p>{service.price}€</p>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button variant="ghost" className="ml-4">
-                                <EllipsisVertical />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              align="end"
-                              className="w-fit flex flex-col gap-2"
-                            >
-                              <ModalUpdateService
-                                prevService={service}
-                                updateService={updateService}
-                              />
-                              <ModalDisableService
-                                id={service.id}
-                                providerCategoryId={category.id}
-                                disableService={disableService}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                      </li>
-                    )
-                )}
-              </ul>
-            </div>
-          )
-      )}
+            )
+        )}
       <div className="divider divider-start text-muted">Inactives</div>
-      {categories.map((category) => {
-        const hasInactiveServices = category.services.some(
-          (service) => !service.isActive
-        );
+      {categories
+        .sort((a, b) => a.name - b.name)
+        .map((category) => {
+          const hasInactiveServices = category.services.some(
+            (service) => !service.isActive
+          );
 
-        return (
-          (hasInactiveServices || !category.isActive) && (
-            <div key={category.id} className="space-y-2 text-muted">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-medium">{category.name}</h2>
-                {!category.isActive && (
-                  <Button
-                    variant="link"
-                    onClick={() => enableCategory(category.id)}
-                  >
-                    Activer la catégorie
-                  </Button>
-                )}
-              </div>
-              <ul className="space-y-2">
-                {category.services.map(
-                  (service) =>
-                    (!service.isActive || !category.isActive) && (
-                      <li
-                        key={service.id}
-                        className="flex items-center justify-between gap-4"
-                      >
-                        <div className="w-full rounded-md p-4 bg-gray-100">
-                          <div className="flex items-center justify-between">
-                            <p>{service.name}</p>
-                            {category.isActive && !service.isActive && (
-                              <Button
-                                variant="link"
-                                onClick={() => enableService(service.id)}
-                              >
-                                Activer le service
-                              </Button>
-                            )}
-                            {!category.isActive && (
-                              <div className="flex items-center">
-                                <p>{convertToHhMm(service.duration)}</p>
-                                <div className="divider divider-horizontal" />
-                                <p>{service.price}€</p>
+          return (
+            (hasInactiveServices || !category.isActive) && (
+              <div key={category.id} className="space-y-2 text-muted">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-medium">{category.name}</h2>
+                  {!category.isActive && (
+                    <Button
+                      variant="link"
+                      onClick={() => enableCategory(category.id)}
+                    >
+                      Activer la catégorie
+                    </Button>
+                  )}
+                </div>
+                <ul className="space-y-2">
+                  {category.services
+                    .sort((a, b) => a.name - b.name)
+                    .map(
+                      (service) =>
+                        (!service.isActive || !category.isActive) && (
+                          <li
+                            key={service.id}
+                            className="flex items-center justify-between gap-4"
+                          >
+                            <div className="w-full rounded-md p-4 bg-gray-100">
+                              <div className="flex items-center justify-between">
+                                <p>{service.name}</p>
+                                {category.isActive && !service.isActive && (
+                                  <Button
+                                    variant="link"
+                                    onClick={() => enableService(service.id)}
+                                  >
+                                    Activer le service
+                                  </Button>
+                                )}
+                                {!category.isActive && (
+                                  <div className="flex items-center">
+                                    <p>{convertToHhMm(service.duration)}</p>
+                                    <div className="divider divider-horizontal" />
+                                    <p>{service.price}€</p>
+                                  </div>
+                                )}
                               </div>
-                            )}
-                          </div>
-                          <p>{service.description}</p>
-                        </div>
-                      </li>
-                    )
-                )}
-              </ul>
-            </div>
-          )
-        );
-      })}
+                              <p>{service.description}</p>
+                            </div>
+                          </li>
+                        )
+                    )}
+                </ul>
+              </div>
+            )
+          );
+        })}
       <p className="text-sm text-muted">
         La suppression des catégories et services est restreinte afin
         d'améliorer l'analyse de l'activité. <br /> Pour supprimer
         définitivement une catégorie ou un service, veuillez{" "}
         <Button variant="link" className="pl-0">
-          <a href="mailto:mlamins.ngom@gmail.com">contacter le support</a>.
+          <a
+            href="https://www.weconnect-rdv.fr/provider/cm13ksbde0000g98rx8rpbwte"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            contacter le support
+          </a>
+          .
         </Button>
       </p>
     </main>
