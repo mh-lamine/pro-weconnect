@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/utils/formatting";
 import { Button } from "./ui/button";
 import { Trash2 } from "lucide-react";
-import axiosPrivate from "@/api/axiosPrivate";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export default function ProviderHeader({
