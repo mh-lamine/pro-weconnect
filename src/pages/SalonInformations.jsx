@@ -172,7 +172,7 @@ export default function SalonInformations() {
     formData.append(id, files[0]);
 
     try {
-      await axiosPrivate.post(`/api/users/${id}`, formData, {
+      await axiosPrivate.post(`/api/s3/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
