@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -77,11 +76,11 @@ const ModalUpdateCategory = ({ category, updateCategory }) => {
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <div className="w-full flex items-center justify-between">
-                <Button variant="outline" onClick={() => setCategory()}>
-                  Annuler
-                </Button>
                 <Button onClick={handleSubmit} disabled={loading && true}>
                   {loading ? <Loader2 className="animate-spin" /> : "Modifier"}
+                </Button>
+                <Button variant="outline" onClick={() => setCategory()}>
+                  Annuler
                 </Button>
               </div>
             </DialogClose>

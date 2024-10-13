@@ -138,11 +138,11 @@ const ModalUpdateService = ({ prevService, updateService }) => {
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <div className="w-full flex items-center justify-between">
-                <Button variant="outline" onClick={() => setService()}>
-                  Annuler
-                </Button>
                 <Button onClick={handleSubmit} disabled={loading && true}>
                   {loading ? <Loader2 className="animate-spin" /> : "Modifier"}
+                </Button>
+                <Button variant="outline" onClick={() => setService()}>
+                  Annuler
                 </Button>
               </div>
             </DialogClose>
