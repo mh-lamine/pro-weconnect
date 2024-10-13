@@ -25,7 +25,7 @@ import { Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { convertToHhMm, convertToMinutes } from "@/utils/formatting";
+import { convertToMinutes } from "@/utils/formatting";
 
 const ModalUpdateService = ({ prevService, updateService }) => {
   const [open, setOpen] = useState(false);
@@ -81,7 +81,7 @@ const ModalUpdateService = ({ prevService, updateService }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Modifier</Button>
+          <Button variant="outline">Modifier la prestation</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -155,7 +155,7 @@ const ModalUpdateService = ({ prevService, updateService }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Modifier</Button>
+        <Button variant="outline">Modifier la prestation</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>

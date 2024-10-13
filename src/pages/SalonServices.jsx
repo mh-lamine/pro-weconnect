@@ -5,6 +5,12 @@ import ModalDisableService from "@/components/modal/ModalDisableService";
 import ModalUpdateCategory from "@/components/modal/ModalUpdateCategory";
 import ModalUpdateService from "@/components/modal/ModalUpdateService";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -12,6 +18,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import {
   Popover,
   PopoverContent,
@@ -39,7 +46,7 @@ const SalonServices = () => {
   async function getCategories() {
     try {
       const response = await axiosPrivate.get("/api/providerCategory/me");
-      setCategories(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+      setCategories(response.data);
     } catch (error) {
       if (error.response?.status === 401) {
         navigate("/login", { state: { from: location }, replace: true });
@@ -160,19 +167,21 @@ const SalonServices = () => {
         <h1 className="text-3xl font-semibold">Mes prestations</h1>
         <ModalAddCategory createCategory={createCategory} />
       </div>
-      {categories
-        ?.sort((a, b) => a.name - b.name)
-        .map(
-          (category) =>
-            category.isActive && (
-              <div key={category.id} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-medium">{category.name}</h2>
+      {categories?.map(
+        (category, index) =>
+          category.isActive && (
+            <Accordion
+              type="single"
+              collapsible
+              defaultValue={"item-0"}
+              key={category.id}
+            >
+              <AccordionItem value={`item-${index}`} className="space-y-2">
+                <div className="flex items-center">
+                  <AccordionTrigger>
+                    <h2 className="text-2xl font-medium">{category.name}</h2>
+                  </AccordionTrigger>
                   <div className="space-x-2">
-                    <ModalAddService
-                      providerCategoryId={category.id}
-                      createService={createService}
-                    />
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button variant="ghost" className="ml-4">
@@ -183,6 +192,11 @@ const SalonServices = () => {
                         align="end"
                         className="w-fit flex flex-col gap-2"
                       >
+                        <ModalAddService
+                          providerCategoryId={category.id}
+                          createService={createService}
+                        />
+                        <DropdownMenuSeparator />
                         <ModalUpdateCategory
                           category={category}
                           updateCategory={updateCategory}
@@ -194,7 +208,7 @@ const SalonServices = () => {
                           variant="destructive"
                           title="Retirer la catégorie"
                           description="Toutes les prestations associées seront retirées."
-                          trigger="Retirer"
+                          trigger="Retirer la catégorie"
                           triggerVariant="destructive"
                         />
                       </PopoverContent>
@@ -202,15 +216,11 @@ const SalonServices = () => {
                   </div>
                 </div>
                 <ul className="space-y-2">
-                  {category.services
-                    .sort((a, b) => a.name - b.name)
-                    .map(
-                      (service) =>
-                        service.isActive && (
-                          <li
-                            key={service.id}
-                            className="flex items-start justify-between gap-10 w-full rounded-md p-4 pr-0 bg-gray-100"
-                          >
+                  {category.services.map(
+                    (service) =>
+                      service.isActive && (
+                        <AccordionContent key={service.id}>
+                          <li className="flex items-start justify-between gap-10 w-full rounded-md p-4 pr-0 bg-gray-100">
                             <div>
                               <h3 className="text-xl">{service.name}</h3>
                               <p>{service.description}</p>
@@ -242,73 +252,71 @@ const SalonServices = () => {
                               </Popover>
                             </div>
                           </li>
-                        )
-                    )}
-                </ul>
-              </div>
-            )
-        )}
-      <div className="divider divider-start text-muted">Inactives</div>
-      {categories
-        .sort((a, b) => a.name - b.name)
-        .map((category) => {
-          const hasInactiveServices = category.services.some(
-            (service) => !service.isActive
-          );
-
-          return (
-            (hasInactiveServices || !category.isActive) && (
-              <div key={category.id} className="space-y-2 text-muted">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-medium">{category.name}</h2>
-                  {!category.isActive && (
-                    <Button
-                      variant="link"
-                      onClick={() => enableCategory(category.id)}
-                    >
-                      Activer la catégorie
-                    </Button>
+                        </AccordionContent>
+                      )
                   )}
-                </div>
-                <ul className="space-y-2">
-                  {category.services
-                    .sort((a, b) => a.name - b.name)
-                    .map(
-                      (service) =>
-                        (!service.isActive || !category.isActive) && (
-                          <li
-                            key={service.id}
-                            className="flex items-center justify-between gap-4"
-                          >
-                            <div className="w-full rounded-md p-4 bg-gray-100">
-                              <div className="flex items-center justify-between">
-                                <p>{service.name}</p>
-                                {category.isActive && !service.isActive && (
-                                  <Button
-                                    variant="link"
-                                    onClick={() => enableService(service.id)}
-                                  >
-                                    Activer le service
-                                  </Button>
-                                )}
-                                {!category.isActive && (
-                                  <div className="flex items-center">
-                                    <p>{convertToHhMm(service.duration)}</p>
-                                    <div className="divider divider-horizontal" />
-                                    <p>{service.price}€</p>
-                                  </div>
-                                )}
-                              </div>
-                              <p>{service.description}</p>
-                            </div>
-                          </li>
-                        )
-                    )}
                 </ul>
+              </AccordionItem>
+            </Accordion>
+          )
+      )}
+      <div className="divider divider-start text-muted">Inactives</div>
+      {categories.map((category) => {
+        const hasInactiveServices = category.services.some(
+          (service) => !service.isActive
+        );
+
+        return (
+          (hasInactiveServices || !category.isActive) && (
+            <div key={category.id} className="space-y-2 text-muted">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-medium">{category.name}</h2>
+                {!category.isActive && (
+                  <Button
+                    variant="link"
+                    onClick={() => enableCategory(category.id)}
+                  >
+                    Activer la catégorie
+                  </Button>
+                )}
               </div>
-            )
-          );
-        })}
+              <ul className="space-y-2">
+                {category.services.map(
+                  (service) =>
+                    (!service.isActive || !category.isActive) && (
+                      <li
+                        key={service.id}
+                        className="flex items-center justify-between gap-4"
+                      >
+                        <div className="w-full rounded-md p-4 bg-gray-100">
+                          <div className="flex items-center justify-between">
+                            <p>{service.name}</p>
+                            {category.isActive && !service.isActive && (
+                              <Button
+                                variant="link"
+                                onClick={() => enableService(service.id)}
+                              >
+                                Activer le service
+                              </Button>
+                            )}
+                            {!category.isActive && (
+                              <div className="flex items-center">
+                                <p>{convertToHhMm(service.duration)}</p>
+                                <div className="divider divider-horizontal" />
+                                <p>{service.price}€</p>
+                              </div>
+                            )}
+                          </div>
+                          <p>{service.description}</p>
+                        </div>
+                      </li>
+                    )
+                )}
+              </ul>
+            </div>
+          )
+        );
+      })}
       <p className="text-sm text-muted">
         La suppression des catégories et services est restreinte afin
         d'améliorer l'analyse de l'activité. <br /> Pour supprimer

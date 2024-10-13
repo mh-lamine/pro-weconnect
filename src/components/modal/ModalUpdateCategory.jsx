@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -57,13 +58,13 @@ const ModalUpdateCategory = ({ category, updateCategory }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Modifier</Button>
+          <Button variant="outline">Modifier la catégorie</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Modifier le nom de la catégorie</DialogTitle>
           </DialogHeader>
-          <div>
+          <DialogDescription>
             <Label htmlFor="name">Nom</Label>
             <Input
               id="name"
@@ -72,7 +73,7 @@ const ModalUpdateCategory = ({ category, updateCategory }) => {
               defaultValue={category.name}
               onChange={(e) => setName(e.target.value)}
             />
-          </div>
+          </DialogDescription>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <div className="w-full flex items-center justify-between">
@@ -93,22 +94,24 @@ const ModalUpdateCategory = ({ category, updateCategory }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Modifier</Button>
+        <Button variant="outline">Modifier la catégorie</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle> Modifier le nom de la catégorie</DrawerTitle>
         </DrawerHeader>
-        <div>
-          <Label htmlFor="name">Nom</Label>
-          <Input
-            id="name"
-            name="name"
-            type="text"
-            defaultValue={category.name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
+        <DialogDescription>
+          <div className="px-4">
+            <Label htmlFor="name">Nom</Label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              defaultValue={category.name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+        </DialogDescription>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <div className="space-y-2">

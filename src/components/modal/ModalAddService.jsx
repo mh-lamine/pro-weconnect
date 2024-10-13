@@ -75,9 +75,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">
-            <PlusCircle />
-          </Button>
+          <Button variant="outline">Ajouter une prestation</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -149,9 +147,7 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">
-          <PlusCircle />
-        </Button>
+        <Button variant="outline">Ajouter une prestation</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>

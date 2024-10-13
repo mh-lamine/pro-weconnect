@@ -47,7 +47,7 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="destructive">Retirer</Button>
+          <Button variant="destructive">Retirer la prestation</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -83,7 +83,7 @@ const ModalDisableService = ({ id, providerCategoryId, disableService }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="destructive">Retirer</Button>
+        <Button variant="destructive">Retirer la prestation</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
