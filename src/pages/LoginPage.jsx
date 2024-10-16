@@ -83,10 +83,6 @@ export default function LoginPage() {
       <Button onClick={handleSubmit} disabled={loading && true}>
         {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
       </Button>
-      <div className="divider mb-0">Pas encore inscrit ?</div>
-      <Button asChild variant="outline">
-        <Link to={"/register"}>Créer un compter</Link>
-      </Button>
     </div>
   );
 }
