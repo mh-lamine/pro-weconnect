@@ -179,7 +179,7 @@ const SalonServices = () => {
               <AccordionItem value={`item-${index}`} className="space-y-2">
                 <div className="flex items-center">
                   <AccordionTrigger>
-                    <h2 className="text-2xl font-medium">{category.name}</h2>
+                    <h2 className="text-2xl font-medium text-left">{category.name}</h2>
                   </AccordionTrigger>
                   <div className="space-x-2">
                     <Popover>
