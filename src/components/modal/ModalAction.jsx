@@ -70,9 +70,6 @@ const ModalAction = ({
           <Button onClick={handleAction} variant={variant} disabled={loading}>
             {loading ? <Loader2 className="animate-spin" /> : actionLabel}
           </Button>
-          <DialogClose asChild>
-            <Button variant="outline">Annuler</Button>
-          </DialogClose>
         </div>
       </DialogFooter>
     </>
@@ -97,11 +94,6 @@ const ModalAction = ({
           >
             {loading ? <Loader2 className="animate-spin" /> : actionLabel}
           </Button>
-          <DrawerClose asChild>
-            <Button className="w-full" variant="outline">
-              Annuler
-            </Button>
-          </DrawerClose>
         </div>
       </DrawerFooter>
     </>

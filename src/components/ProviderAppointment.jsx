@@ -17,10 +17,7 @@ const ProviderAppointment = ({
         </h2>
       </div>
       <div className="flex flex-col md:flex-row md:gap-4">
-        <Button
-          variant="link"
-          className={`w-fit py-0 ${past && "text-muted"}`}
-        >
+        <Button variant="link" className={`w-fit py-0 ${past && "text-muted"}`}>
           <a href={`tel:${appointment.client.phoneNumber}`}>
             {appointment.client.phoneNumber.replace(/(\d{2})(?=\d)/g, "$1 ")}
           </a>
@@ -56,9 +53,7 @@ const ProviderAppointment = ({
         </Badge>
       )}
       {appointment.status === "ACCEPTED" && (
-        <Badge variant="success" className={past && "bg-muted"}>
-          Confirmé
-        </Badge>
+        <Badge className={past && "bg-muted"}>Rendez-vous confirmé</Badge>
       )}
       {appointment.status === "COMPLETED" && (
         <Badge variant="success" className={past && "bg-muted"}>
@@ -70,8 +65,8 @@ const ProviderAppointment = ({
           Annulé
         </Badge>
       )}
-      <div className="flex justify-between">
-        {appointment.status === "PENDING" && (
+      {appointment.status === "PENDING" && (
+        <div className="flex justify-between">
           <ModalAction
             id={appointment.id}
             action={acceptAppointment}
@@ -82,9 +77,6 @@ const ProviderAppointment = ({
             trigger={"Accepter"}
             variant={"success"}
           />
-        )}
-        {(appointment.status === "PENDING" ||
-          appointment.status === "ACCEPTED") && (
           <ModalAction
             id={appointment.id}
             action={cancelAppointment}
@@ -95,8 +87,22 @@ const ProviderAppointment = ({
             trigger={"Refuser"}
             variant={"destructive"}
           />
-        )}
-      </div>
+        </div>
+      )}
+      {appointment.status === "ACCEPTED" && (
+        <div className="ml-auto">
+          <ModalAction
+            id={appointment.id}
+            action={cancelAppointment}
+            actionLabel={"Annuler"}
+            title={"Annuler le rendez-vous"}
+            description={"Êtes-vous sûr de vouloir annuler ce rendez-vous ?"}
+            successMessage={"Rendez-vous annulé"}
+            trigger={"Annuler"}
+            variant={"destructive"}
+          />
+        </div>
+      )}
     </div>
   );
 };
