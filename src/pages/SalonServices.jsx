@@ -158,7 +158,7 @@ const SalonServices = () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/salon/availabilities">Disponibilités</Link>
+              <Link to="/salon/availabilities">Prestations</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
