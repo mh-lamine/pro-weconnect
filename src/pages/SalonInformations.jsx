@@ -138,7 +138,7 @@ export default function SalonInformations() {
       return;
     }
 
-    if (contactMethods.email && !EMAIL_REGEX.test(contactMethods.email)) {
+    if (providerInfos.email && !EMAIL_REGEX.test(providerInfos.email)) {
       toast.error("L'adresse email n'est pas valide");
       setEditLoading(false);
       return;
@@ -269,6 +269,13 @@ export default function SalonInformations() {
             defaultValue={prevInfos.address}
             handleChange={handleChange}
           />
+          <EditableInput
+            id="email"
+            label="Email"
+            type="email"
+            defaultValue={prevInfos.email}
+            handleChange={handleChange}
+          />
         </div>
         <div className="divider divider-start">
           <p className="text-muted">Moyens de contact</p>
@@ -289,14 +296,6 @@ export default function SalonInformations() {
             type="text"
             defaultValue={prevInfos.contactMethods.instagram}
             placeholder={"@weconnect_off"}
-            handleChange={handleChange}
-          />
-          <EditableInput
-            id="email"
-            name="contactMethod"
-            label="Email"
-            type="email"
-            defaultValue={prevInfos.contactMethods.email}
             handleChange={handleChange}
           />
         </div>

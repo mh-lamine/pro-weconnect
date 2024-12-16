@@ -26,7 +26,7 @@ import { toast } from "sonner";
 
 const ModalAction = ({
   id,
-  action,
+  action = null,
   actionLabel,
   title,
   description,
@@ -34,8 +34,10 @@ const ModalAction = ({
   trigger,
   variant = "outline",
   triggerVariant,
+  defaultOpen = false,
+  cancelText = "Annuler",
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -51,7 +53,7 @@ const ModalAction = ({
       }
       setOpen(false);
     } catch (error) {
-      toast.error("Une erreur est survenue, veuillez contacter le support.");
+      setError("Une erreur est survenue, veuillez contacter le support.");
     }
     setLoading(false);
   };
@@ -62,14 +64,19 @@ const ModalAction = ({
         <DialogTitle className={variant == "destructive" && "text-destructive"}>
           {title}
         </DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
+        <DialogDescription className="whitespace-pre-line">{description}</DialogDescription>
       </DialogHeader>
       {error && <p className="text-destructive text-sm">{error}</p>}
       <DialogFooter className="sm:justify-start">
         <div className="w-full flex items-center justify-between">
-          <Button onClick={handleAction} variant={variant} disabled={loading}>
-            {loading ? <Loader2 className="animate-spin" /> : actionLabel}
-          </Button>
+          {action && (
+            <Button onClick={handleAction} variant={variant} disabled={loading}>
+              {loading ? <Loader2 className="animate-spin" /> : actionLabel}
+            </Button>
+          )}
+          <DialogClose asChild>
+            <Button variant="outline">{cancelText}</Button>
+          </DialogClose>
         </div>
       </DialogFooter>
     </>
@@ -81,19 +88,28 @@ const ModalAction = ({
         <DrawerTitle className={variant == "destructive" && "text-destructive"}>
           {title}
         </DrawerTitle>
-        <DrawerDescription>{description}</DrawerDescription>
+        <DrawerDescription className="whitespace-pre-line">
+          {description}
+        </DrawerDescription>
       </DrawerHeader>
       {error && <p className="text-destructive text-sm">{error}</p>}
       <DrawerFooter className="pt-2">
         <div className="space-y-2">
-          <Button
-            className="w-full"
-            onClick={handleAction}
-            variant={variant}
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="animate-spin" /> : actionLabel}
-          </Button>
+          {action && (
+            <Button
+              className="w-full"
+              onClick={handleAction}
+              variant={variant}
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="animate-spin" /> : actionLabel}
+            </Button>
+          )}
+          <DrawerClose asChild>
+            <Button className="w-full" variant="outline">
+              {cancelText}
+            </Button>
+          </DrawerClose>
         </div>
       </DrawerFooter>
     </>

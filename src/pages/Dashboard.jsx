@@ -1,26 +1,46 @@
 import ProviderAppointment from "@/components/ProviderAppointment";
+import ModalAction from "@/components/modal/ModalAction";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import useLogout from "@/hooks/useLogout";
-import { Settings } from "lucide-react";
+import { BellDot, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [appointments, setAppointments] = useState();
+  const [provider, setProvider] = useState();
   const [apiLoading, setApiLoading] = useState(true);
   const logout = useLogout();
 
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+
+  async function getProvider() {
+    setApiLoading(true);
+    try {
+      const { data } = await axiosPrivate.get("/api/users");
+      setProvider(data);
+      return data;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setApiLoading(false);
+    }
+  }
 
   async function getAppointmentsAsProvider() {
     try {
@@ -67,6 +87,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    getProvider();
     getAppointmentsAsProvider();
   }, []);
 
@@ -101,6 +122,18 @@ export default function Dashboard() {
           <Link to="/salon">
             <Settings size={24} className="text-primary" />
           </Link>
+          {!apiLoading && !provider?.email && (
+            <div className="ml-auto">
+              <ModalAction
+                defaultOpen={true}
+                title="Nouveauté : connexion par e-mail"
+                description={`Chers professionnels,\n\nAprès la prochaine mise à jour, vous devrez vous connecter avec votre adresse e-mail pour accéder à votre espace. Vous pouvez mettre à jour votre adresse e-mail sur la page des informations de votre salon.\n\nMerci de votre compréhension, l'équipe WeConnect 🚀`}
+                cancelText="C'est compris !"
+                trigger={<BellDot size={24} className="text-primary" />}
+                triggerVariant="ghost"
+              />
+            </div>
+          )}
         </div>
         <TabsContent value="today" className="space-y-4">
           {todaysAppointments.length ? (
