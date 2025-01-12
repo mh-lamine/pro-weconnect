@@ -68,7 +68,7 @@ const SalonAvailabilities = () => {
   }
 
   async function createSpecialAvailability(availability) {
-    const res = await axiosPrivate.post(
+    await axiosPrivate.post(
       "/api/availabilities/special",
       availability
     );

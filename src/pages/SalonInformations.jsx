@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -43,7 +43,7 @@ export default function SalonInformations() {
 
   async function getProvider() {
     try {
-      const { data } = await axiosPrivate.get("/api/users");
+      const { data } = await axiosPrivate.get("/api/pro");
       setPrevInfos(data);
       return data;
     } catch (error) {
@@ -222,7 +222,7 @@ export default function SalonInformations() {
       </Breadcrumb>
       <h1 className="text-3xl font-semibold">Mes informations</h1>
       <ProviderHeader
-        name={prevInfos.providerName}
+        name={prevInfos.name}
         address={prevInfos.address}
         profilePicture={prevInfos.profilePicture}
         coverImage={prevInfos.coverImage}
@@ -256,10 +256,10 @@ export default function SalonInformations() {
       <form className="space-y-2">
         <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4 mb-8">
           <EditableInput
-            id="providerName"
+            id="name"
             label="Nom du salon"
             type="text"
-            defaultValue={prevInfos.providerName}
+            defaultValue={prevInfos.name}
             handleChange={handleChange}
           />
           <EditableInput
@@ -276,26 +276,33 @@ export default function SalonInformations() {
             defaultValue={prevInfos.email}
             handleChange={handleChange}
           />
+          <EditableInput
+            id="phoneNumber"
+            label="Numéro de téléphone"
+            type="tel"
+            defaultValue={prevInfos.phoneNumber}
+            handleChange={handleChange}
+          />
         </div>
         <div className="divider divider-start">
           <p className="text-muted">Moyens de contact</p>
         </div>
         <div className="space-y-2 md:space-y-0 md:grid grid-cols-2 md:gap-4">
           <EditableInput
-            id="phoneNumber"
-            name="contactMethod"
-            label="Téléphone du salon"
-            type="tel"
-            defaultValue={prevInfos.contactMethods.phoneNumber}
-            handleChange={handleChange}
-          />
-          <EditableInput
             id="instagram"
             name="contactMethod"
             label="Instagram"
             type="text"
-            defaultValue={prevInfos.contactMethods.instagram}
+            defaultValue={prevInfos.contactMethods?.instagram}
             placeholder={"@weconnect_off"}
+            handleChange={handleChange}
+          />
+          <EditableInput
+            id="snapchat"
+            name="contactMethod"
+            label="Snapchat"
+            type="text"
+            defaultValue={prevInfos.contactMethods?.snapchat}
             handleChange={handleChange}
           />
         </div>

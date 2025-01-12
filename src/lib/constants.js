@@ -1,0 +1,1 @@
+export const MAX_SERVICES_ESSENTIAL = 4;

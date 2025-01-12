@@ -6,10 +6,9 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Salon = () => {
-  const navigate = useNavigate();
   return (
     <main className="w-full max-w-screen-md mx-auto p-6 flex flex-1 flex-col">
       <Breadcrumb>

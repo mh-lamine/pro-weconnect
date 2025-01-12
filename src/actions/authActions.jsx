@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const REGISTER_URL = "/api/auth/register";
-const LOGIN_URL = "/api/auth/login";
+const LOGIN_URL = "/api/auth/pro/login";
 
 export async function handleRegister(data) {
   return await axios.post(REGISTER_URL, data, {

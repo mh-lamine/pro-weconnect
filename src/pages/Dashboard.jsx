@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import useAuth from "@/hooks/useAuth";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import useLogout from "@/hooks/useLogout";
 import { BellDot, Settings } from "lucide-react";
@@ -22,25 +23,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [appointments, setAppointments] = useState();
-  const [provider, setProvider] = useState();
   const [apiLoading, setApiLoading] = useState(true);
+  
+  const { auth: provider } = useAuth();
   const logout = useLogout();
-
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-
-  async function getProvider() {
-    setApiLoading(true);
-    try {
-      const { data } = await axiosPrivate.get("/api/users");
-      setProvider(data);
-      return data;
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setApiLoading(false);
-    }
-  }
 
   async function getAppointmentsAsProvider() {
     try {
@@ -87,7 +75,6 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    getProvider();
     getAppointmentsAsProvider();
   }, []);
 
@@ -136,7 +123,7 @@ export default function Dashboard() {
           )}
         </div>
         <TabsContent value="today" className="space-y-4">
-          {todaysAppointments.length ? (
+          {!apiLoading && todaysAppointments.length ? (
             <>
               <p className="text-muted">
                 Vous avez {todaysAppointments.length} rendez-vous aujourd'hui.
@@ -178,7 +165,7 @@ export default function Dashboard() {
               type="single"
               collapsible
               defaultValue={"item-0"}
-              className="w-full"
+              className="w-full space-y-4"
             >
               <AccordionItem value={`item-0`}>
                 <AccordionTrigger>

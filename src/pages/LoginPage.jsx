@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { handleLogin } from "@/actions/authActions";
 import { Loader2 } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { Checkbox } from "@/components/ui/checkbox";
+import axios from "axios";
 
 export default function LoginPage() {
   const { setAuth, persist, setPersist } = useAuth();
   const [credentials, setCredentials] = useState({
-    phoneNumber: "",
+    email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
@@ -32,12 +33,15 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await handleLogin(credentials, "login");
+      const response = await axios.post("/api/auth/pro/login", credentials, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
       setAuth(response.data);
       navigate(from, { replace: true });
     } catch (error) {
       if (error.response.status === 401) {
-        setError("Numéro de téléphone ou mot de passe incorrect");
+        setError("Email ou mot de passe incorrect");
       } else {
         setError("Une erreur est survenue, veuillez contacter le support");
       }
@@ -54,9 +58,9 @@ export default function LoginPage() {
       <h1 className="text-3xl font-semibold">Se connecter</h1>
       <form className="space-y-2 py-2">
         <Input
-          name="phoneNumber"
-          type="tel"
-          placeholder="Numéro de téléphone"
+          name="email"
+          type="email"
+          placeholder="Email"
           onChange={handleChange}
           onClick={() => setError("")}
         />
@@ -78,11 +82,11 @@ export default function LoginPage() {
             </label>
           </div>
         </div>
-      </form>
-      {error && <p className="text-destructive text-sm">{error}</p>}
-      <Button onClick={handleSubmit} disabled={loading && true}>
+      <Button type="submit" className="w-full" onClick={handleSubmit} disabled={loading && true}>
         {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
       </Button>
+      </form>
+      {error && <p className="text-destructive text-sm">{error}</p>}
     </div>
   );
 }
