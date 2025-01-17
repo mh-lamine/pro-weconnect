@@ -29,9 +29,9 @@ const Salon = () => {
       <h1 className="text-3xl font-semibold py-4">Mon salon</h1>
       <Link
         to="informations"
-        className="flex items-center justify-between py-2"
+        className="flex items-center justify-between py-1"
       >
-        <h2 className="text-xl font-medium">Informations du salon</h2>
+        <h2 className="text-lg font-medium">Informations du salon</h2>
         <div className="rotate-180">
           <LeftArrow size={36} />
         </div>
@@ -39,16 +39,16 @@ const Salon = () => {
       <div className="divider my-0"></div>
       <Link
         to="availabilities"
-        className="flex items-center justify-between py-2"
+        className="flex items-center justify-between py-1"
       >
-        <h2 className="text-xl font-medium">Disponibilités</h2>
+        <h2 className="text-lg font-medium">Disponibilités</h2>
         <div className="rotate-180">
           <LeftArrow size={36} />
         </div>
       </Link>
       <div className="divider my-0"></div>
-      <Link to="services" className="flex items-center justify-between py-2">
-        <h2 className="text-xl font-medium">Prestations</h2>
+      <Link to="services" className="flex items-center justify-between py-1">
+        <h2 className="text-lg font-medium">Prestations</h2>
         <div className="rotate-180">
           <LeftArrow size={36} />
         </div>
