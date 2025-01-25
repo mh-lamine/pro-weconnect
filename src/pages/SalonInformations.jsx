@@ -135,7 +135,7 @@ export default function SalonInformations() {
       return;
     }
     try {
-      await axiosPrivate.patch("/api/users", {
+      await axiosPrivate.patch("/api/pro", {
         ...providerInfos,
         contactMethods,
       });
