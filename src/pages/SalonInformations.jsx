@@ -129,15 +129,6 @@ export default function SalonInformations() {
       }
     }
 
-    if (
-      contactMethods.phoneNumber &&
-      !PHONE_NUMBER_REGEX.test(contactMethods.phoneNumber)
-    ) {
-      toast.error("Le numéro de téléphone n'est pas valide");
-      setEditLoading(false);
-      return;
-    }
-
     if (providerInfos.email && !EMAIL_REGEX.test(providerInfos.email)) {
       toast.error("L'adresse email n'est pas valide");
       setEditLoading(false);
