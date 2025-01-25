@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import useAuth from "@/hooks/useAuth";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -28,12 +29,24 @@ const EMAIL_REGEX =
 const validFileTypes = ["image/jpeg", "image/jpg", "image/png"];
 
 export default function SalonInformations() {
-  const [prevInfos, setPrevInfos] = useState();
-  const [error, setError] = useState();
-  const [loading, setLoading] = useState(true);
+  const { auth } = useAuth();
 
-  const [providerInfos, setProviderInfos] = useState();
-  const [contactMethods, setContactMethods] = useState();
+  const [prevInfos, setPrevInfos] = useState(auth);
+  const [salonInfos, setSalonInfos] = useState({
+    name: auth.name,
+    address: auth.address,
+    email: auth.email,
+    phoneNumber: auth.phoneNumber,
+    bookingTerms: auth.bookingTerms,
+    contactMethods: auth.contactMethods,
+    autoAcceptAppointments: auth.autoAcceptAppointments,
+    isInVacancyMode: auth.isInVacancyMode,
+    profilePicture: auth.profilePicture,
+    coverImage: auth.coverImage,
+  });
+
+  const [error, setError] = useState();
+
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState(false);
 
@@ -51,8 +64,6 @@ export default function SalonInformations() {
       if (error.response?.status === 401) {
         navigate("/login", { state: { from: location }, replace: true });
       }
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -78,77 +89,85 @@ export default function SalonInformations() {
     }
   };
 
-  useEffect(() => {
-    async function getData() {
-      const data = await getProvider();
-      setContactMethods(data.contactMethods);
-    }
-    getData();
-  }, []);
+  const resetSalonInfos = () => {
+    setSalonInfos({
+      name: auth.name,
+      address: auth.address,
+      email: auth.email,
+      phoneNumber: auth.phoneNumber,
+      bookingTerms: auth.bookingTerms,
+      contactMethods: auth.contactMethods,
+      autoAcceptAppointments: auth.autoAcceptAppointments,
+      isInVacancyMode: auth.isInVacancyMode,
+      profilePicture: auth.profilePicture,
+      coverImage: auth.coverImage,
+    });
+  };
 
   const handleChange = (e) => {
     const { id, name, value } = e.target;
     if (name === "contactMethod") {
-      setContactMethods((prev) => ({ ...prev, [id]: value }));
+      const newContactMethods = { ...salonInfos.contactMethods, [id]: value };
+      setSalonInfos({ ...salonInfos, contactMethods: newContactMethods });
       return;
     }
-    setProviderInfos({ ...providerInfos, [id]: value });
+    setSalonInfos({ ...salonInfos, [id]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setEditLoading(true);
-    if (!providerInfos && !contactMethods) {
+
+    const { name, email, phoneNumber, contactMethods } = salonInfos;
+    if (!name || !email || !phoneNumber) {
+      toast.error("Veuillez renseigner tous les champs obligatoires");
       setEditLoading(false);
-      toast("Aucune modification n'a été effectuée");
       return;
     }
 
-    if (providerInfos && !contactMethods) {
-      const hasChanges = Object.keys(providerInfos).some(
-        (key) => providerInfos[key] !== prevInfos[key]
-      );
+    const { contactMethods: _, ...salonInfosWithoutContactMethods } =
+      salonInfos;
+    const { contactMethods: __, ...prevInfosWithoutContactMethods } = prevInfos;
 
-      if (!hasChanges) {
-        setProviderInfos();
-        setEditLoading(false);
-        toast("Aucune modification n'a été effectuée");
-        return;
-      }
-    }
-    if (contactMethods && !providerInfos) {
-      const hasChanges = Object.keys(contactMethods).some(
-        (key) => contactMethods[key] !== prevInfos.contactMethods[key]
-      );
+    const hasInfosChanges = Object.keys(salonInfosWithoutContactMethods).some(
+      (key) =>
+        salonInfosWithoutContactMethods[key] !==
+        prevInfosWithoutContactMethods[key]
+    );
 
-      if (!hasChanges) {
-        setContactMethods(prevInfos.contactMethods);
-        setEditLoading(false);
-        toast("Aucune modification n'a été effectuée");
-        return;
-      }
+    const hasContactMethodsChanges = Object.keys(contactMethods).some(
+      (key) => contactMethods[key] !== prevInfos.contactMethods[key]
+    );
+
+    if (!hasInfosChanges && !hasContactMethodsChanges) {
+      toast("Aucune modification effectuée");
+      setEditLoading(false);
+      return;
     }
 
-    if (providerInfos.email && !EMAIL_REGEX.test(providerInfos.email)) {
+    if (email && !EMAIL_REGEX.test(email)) {
       toast.error("L'adresse email n'est pas valide");
       setEditLoading(false);
       return;
     }
-    try {
-      await axiosPrivate.patch("/api/pro", {
-        ...providerInfos,
-        contactMethods,
-      });
-      await getProvider();
-      toast("Modifications enregistrées");
-    } catch (error) {
-      if (!error.response) {
-        toast.error("Une erreur est survenue, veuillez contacter le support");
-      } else {
-        toast.error(error.response.data.message);
-      }
+
+    if (phoneNumber && !PHONE_NUMBER_REGEX.test(phoneNumber)) {
+      toast.error("Le numéro de téléphone n'est pas valide");
+      setEditLoading(false);
+      return;
     }
-    setProviderInfos();
+
+    // Optimistically update the UI before making the API call
+    const updatedInfos = { ...salonInfos };
+    setSalonInfos(updatedInfos); // Immediately update the state to reflect changes
+
+    try {
+      await axiosPrivate.patch("/api/pro", { ...salonInfos });
+      toast.success("Modifications enregistrées");
+    } catch (error) {
+      resetSalonInfos();
+      toast.error("Une erreur est survenue, veuillez contacter le support");
+    }
     setEditLoading(false);
   };
 
@@ -180,10 +199,6 @@ export default function SalonInformations() {
     }
   };
 
-  if (loading) {
-    return <Loader2 className="w-8 h-8 animate-spin flex-1" />;
-  }
-
   if (error) {
     return <Error errMsg={error} />;
   }
@@ -213,10 +228,10 @@ export default function SalonInformations() {
       </Breadcrumb>
       <h1 className="text-3xl font-semibold">Mes informations</h1>
       <ProviderHeader
-        name={prevInfos.name}
-        address={prevInfos.address}
-        profilePicture={prevInfos.profilePicture}
-        coverImage={prevInfos.coverImage}
+        name={salonInfos.name}
+        address={salonInfos.address}
+        profilePicture={salonInfos.profilePicture}
+        coverImage={salonInfos.coverImage}
         rmprofile={rmprofile}
         rmcover={rmcover}
       />
@@ -250,28 +265,28 @@ export default function SalonInformations() {
             id="name"
             label="Nom du salon"
             type="text"
-            defaultValue={prevInfos.name}
+            defaultValue={salonInfos.name}
             handleChange={handleChange}
           />
           <EditableInput
             id="address"
             label="Adresse"
             type="text"
-            defaultValue={prevInfos.address}
+            defaultValue={salonInfos.address}
             handleChange={handleChange}
           />
           <EditableInput
             id="email"
             label="Email"
             type="email"
-            defaultValue={prevInfos.email}
+            defaultValue={salonInfos.email}
             handleChange={handleChange}
           />
           <EditableInput
             id="phoneNumber"
             label="Numéro de téléphone"
             type="tel"
-            defaultValue={prevInfos.phoneNumber}
+            defaultValue={salonInfos.phoneNumber}
             handleChange={handleChange}
           />
         </div>
@@ -284,7 +299,7 @@ export default function SalonInformations() {
             name="contactMethod"
             label="Instagram"
             type="text"
-            defaultValue={prevInfos.contactMethods?.instagram}
+            defaultValue={salonInfos.contactMethods?.instagram}
             placeholder={"@weconnect_off"}
             handleChange={handleChange}
           />
@@ -293,7 +308,7 @@ export default function SalonInformations() {
             name="contactMethod"
             label="Snapchat"
             type="text"
-            defaultValue={prevInfos.contactMethods?.snapchat}
+            defaultValue={salonInfos.contactMethods?.snapchat}
             handleChange={handleChange}
           />
         </div>
@@ -308,13 +323,10 @@ export default function SalonInformations() {
               </p>
               <Switch
                 id="autoAccept"
-                checked={
-                  providerInfos?.autoAcceptAppointments ??
-                  prevInfos.autoAcceptAppointments
-                }
+                checked={salonInfos.autoAcceptAppointments}
                 onCheckedChange={(checked) => {
-                  setProviderInfos({
-                    ...providerInfos,
+                  setSalonInfos({
+                    ...salonInfos,
                     autoAcceptAppointments: checked,
                   });
                 }}
@@ -339,12 +351,10 @@ export default function SalonInformations() {
               </p>
               <Switch
                 id="vacancyMode"
-                checked={
-                  providerInfos?.isInVacancyMode ?? prevInfos.isInVacancyMode
-                }
+                checked={salonInfos?.isInVacancyMode}
                 onCheckedChange={(checked) => {
-                  setProviderInfos({
-                    ...providerInfos,
+                  setSalonInfos({
+                    ...salonInfos,
                     isInVacancyMode: checked,
                   });
                 }}
@@ -363,7 +373,7 @@ export default function SalonInformations() {
           <Textarea
             id="bookingTerms"
             type="text"
-            defaultValue={prevInfos.bookingTerms}
+            defaultValue={salonInfos.bookingTerms}
             onChange={handleChange}
             className="text-lg whitespace-pre-line"
           />
@@ -379,14 +389,7 @@ export default function SalonInformations() {
               "Enregistrer les modifications"
             )}
           </Button>
-          <Button
-            variant="outline"
-            type="reset"
-            onClick={() => {
-              setProviderInfos();
-              setContactMethods(prevInfos.contactMethods);
-            }}
-          >
+          <Button variant="outline" type="reset" onClick={resetSalonInfos}>
             Annuler
           </Button>
         </div>
