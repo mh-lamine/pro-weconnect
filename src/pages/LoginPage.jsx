@@ -82,9 +82,14 @@ export default function LoginPage() {
             </label>
           </div>
         </div>
-      <Button type="submit" className="w-full" onClick={handleSubmit} disabled={loading && true}>
-        {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
-      </Button>
+        <Button
+          type="submit"
+          className="w-full"
+          onClick={handleSubmit}
+          disabled={loading && true}
+        >
+          {loading ? <Loader2 className="animate-spin" /> : "Se connecter"}
+        </Button>
       </form>
       {error && <p className="text-destructive text-sm">{error}</p>}
     </div>
