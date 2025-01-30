@@ -60,6 +60,7 @@ const SalonServices = () => {
   async function createService(service) {
     try {
       await axiosPrivate.post("/api/providerService", service);
+      toast.success("Service ajouté");
       getCategories();
     } catch (error) {
       toast.error(error.message);
@@ -69,6 +70,7 @@ const SalonServices = () => {
   async function createCategory(category) {
     try {
       await axiosPrivate.post("/api/providerCategory", category);
+      toast.success("Catégorie ajoutée");
       getCategories();
     } catch (error) {
       toast.error(error.message);
