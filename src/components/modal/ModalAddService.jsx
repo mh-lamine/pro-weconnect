@@ -110,7 +110,6 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
                 id="duration"
                 name="duration"
                 type="time"
-                defaultValue="00:00"
                 onChange={handleChange}
               />
             </div>
@@ -176,7 +175,6 @@ const ModalAddService = ({ providerCategoryId, createService }) => {
               id="duration"
               name="duration"
               type="time"
-              defaultValue="00:00"
               onChange={handleChange}
             />
           </div>
