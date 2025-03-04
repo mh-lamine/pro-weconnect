@@ -69,7 +69,7 @@ export default function SalonInformations() {
 
   const rmprofile = async () => {
     try {
-      await axiosPrivate.delete("/api/users/profile", {
+      await axiosPrivate.delete("/api/s3/profile", {
         profilePicture: null,
       });
       await getProvider();
@@ -80,7 +80,7 @@ export default function SalonInformations() {
 
   const rmcover = async () => {
     try {
-      await axiosPrivate.delete("/api/users/cover", {
+      await axiosPrivate.delete("/api/s3/cover", {
         coverImage: null,
       });
       await getProvider();
