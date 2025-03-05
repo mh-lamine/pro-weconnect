@@ -176,6 +176,7 @@ export default function SalonInformations() {
 
     if (!validFileTypes.includes(files[0].type)) {
       toast.error("Le format du fichier n'est pas valide");
+      return;
     }
 
     const formData = new FormData();
@@ -187,15 +188,10 @@ export default function SalonInformations() {
           "Content-Type": "multipart/form-data",
         },
       });
-      getProvider();
-      toast.success("Photo de profil mise à jour avec succès");
+      toast.success("Photo mise à jour avec succès");
     } catch (error) {
-      if (error.response.status === 413) {
-        toast.error("Le fichier est trop volumineux");
-      } else {
-        console.error(error.response.data.message);
-        toast.error("Une erreur est survenue, veuillez contacter le support");
-      }
+      console.error(error.response.data.message);
+      toast.error("Une erreur est survenue, veuillez contacter le support");
     }
   };
 
